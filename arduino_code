@@ -1,0 +1,225 @@
+
+
+
+
+
+
+// Getting_BPM_to_Monitor
+// 9600 baud
+
+
+
+
+#define USE_ARDUINO_INTERRUPTS true    // Set-up low-level interrupts for most acurate BPM math.
+
+#include <PulseSensorPlayground.h>     // Includes the PulseSensorPlayground Library.
+
+
+
+            // VARIABLES
+
+
+
+// heart rate variables
+
+const int PulseWire = 0;       // PulseSensor PURPLE WIRE connected to ANALOG PIN 0
+
+int Threshold = 550;           // Determine which Signal to "count as a beat" and which to ignore.
+
+                               // Use the "Gettting Started Project" to fine-tune Threshold Value beyond default setting.
+
+                               // Otherwise leave the default "550" value.
+
+
+
+int bpmDuration = 200;          // time finger on bpm sensor
+
+int bpmCheck = 1;
+
+
+
+// led variables
+
+const int redLED = 13;            // red led - syncs heartbeat
+
+const int greenLED = 5;           // green led - used to instruct when to place finger
+
+
+
+// buzzer variables
+
+int buzzer = 4;                 // buzzer
+
+int alarmLength = 50;          // length of alarm
+
+int alarm = 1;                  // alarm
+
+
+
+PulseSensorPlayground pulseSensor;  // Creates an instance of the PulseSensorPlayground object called "pulseSensor"
+
+
+
+
+
+String(function) = "device_on";     // specify which function to call
+
+
+
+void setup() {
+
+
+
+  Serial.begin(9600);          // For Serial Monitor
+
+
+
+  // Configure the PulseSensor object, by assigning our variables to it.
+
+  pulseSensor.analogInput(PulseWire);
+
+  pulseSensor.blinkOnPulse(redLED);       //auto-magically blink Arduino's LED with heartbeat.
+
+  pulseSensor.setThreshold(Threshold);
+
+  pinMode(greenLED, OUTPUT);                  // green led
+
+
+  analogReference(EXTERNAL);                // Read AREF pin as USB noisy...
+
+
+  // Double-check the "pulseSensor" object was created and "began" seeing a signal.
+
+   if (pulseSensor.begin()) {
+
+    Serial.println("Working correctly");  //This prints one time at Arduino power-up,  or on Arduino reset.
+
+
+
+    digitalWrite(greenLED, HIGH);           // turn on green led to instruct place finger
+
+  }
+
+}
+
+
+
+
+
+
+
+void loop() {
+
+
+  if (Serial.available()) {
+
+  String command = Serial.readString();
+
+
+  if (command == "heart_rate"){
+
+    heartRate();
+  }
+
+  else if (command == "alert"){
+
+    alert();
+  }
+
+  else if (command == "alert_off") {
+    alert_off();
+  }
+
+  else if (command == "device_on") {
+    device_on();
+  }
+
+  }
+
+
+}
+
+
+
+
+
+void heartRate() {
+
+int myBPM = pulseSensor.getBeatsPerMinute();  // Calls function on our pulseSensor object that returns BPM as an "int".
+
+
+
+                                               // "myBPM" hold this BPM value now.
+
+if (pulseSensor.sawStartOfBeat()) {            // Constantly test to see if "a beat happened".
+
+
+
+digitalWrite(greenLED, LOW);                      // green led off
+
+Serial.println("Heart Beat Detected ");      // If test is "true", print a message "a heartbeat happened".
+
+Serial.print("BPM: ");                        // Print phrase "BPM: "
+
+Serial.println(myBPM);                        // Print the value inside of myBPM.
+
+}
+
+
+
+  delay(20);                    // considered best practice in a simple sketch.
+
+
+
+  // hold until a regular red light pattern happens for several seconds, then remove
+
+  // need to return the bpm
+
+
+}
+
+
+
+
+
+void alert() {
+
+
+
+  while (alarm < alarmLength) {
+
+  digitalWrite(greenLED, LOW);                  // turn green led off, if on
+
+  digitalWrite(redLED, HIGH);                  // alert light on
+
+  tone(buzzer, 1200);                          //send x amount Hz / KHz sound signal
+
+  delay(300);                                 // time buzzer on
+
+  noTone(buzzer);                             // buzzer off
+
+  delay(10);                                  // delay
+
+
+
+  alarm = alarm+1;
+
+
+
+    }
+}
+
+void alert_off() {
+
+    digitalWrite(greenLED, LOW);                  // turn green led off, if on
+
+    digitalWrite(redLED, LOW);                    // alert light off
+
+    noTone(buzzer);                             // buzzer off
+}
+
+void device_on() {
+    digitalWrite(greenLED, LOW);                  // turn green led off, if on
+
+    digitalWrite(redLED, LOW);                    // alert light off
+}

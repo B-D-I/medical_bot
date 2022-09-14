@@ -1,0 +1,87 @@
+
+{"conversation":  [
+  {"conv_name": "greetings",
+    "inputs":  ["hello", "hey", "hi", "good day", "howdy", "greetings", "what's up"],
+    "outputs": ["hello", "hey there", "how can I help?"]
+  },
+  {"conv_name": "goodbye",
+    "inputs": ["bye", "goodbye", "cya", "see ya", "adios"],
+    "outputs": ["goodbye", "bye", "until next time"]
+  },
+  { "conv_name": "your_name",
+    "inputs": ["what is your name", "what's your name", "who are you", "what are you"],
+    "outputs": ["you can call me a Little G P, i'm your medical assistant"]
+  },
+  { "conv_name": "formality",
+    "inputs": ["how are you", "how's it going", "you ok"],
+    "outputs": ["i am fine, thank you!", "i am good, thanks for asking"]
+  },
+  { "conv_name": "user_formality",
+    "inputs": ["I am fine", "I'm doing good", "I'm well", "I'm fine"],
+    "outputs": ["great to hear that, how can i help?"]
+  },
+  { "conv_name": "troubleshoot",
+    "inputs": ["how does this work", "what do i do", "this is not working", "i'm stuck", "troubleshoot"],
+    "outputs": ["I can provide information regarding symptoms, classify images of skin conditions, provide alerts to next of kin, and more"]
+  },
+  {"conv_name": "unwell",
+    "inputs": ["i'm unwell", "i feel sick", "i feel poorly", "i feel unwell", "i am unwell", "i'm sick"],
+    "outputs": ["Sorry to hear, please tell if what is wrong?"]
+  },
+  {"conv_name": "services",
+    "inputs": ["what can you do", "what services do you provide", "what do you do"],
+    "outputs": ["I am a medical assistant, I will try and resolve any medical issues you have"]
+  },
+  {"conv_name": "alert",
+    "inputs": ["send alert", "alert", "help", "help me", "i need help", "i have fallen", "i have had a fall", "emergency", "send alarm"],
+    "outputs": ["ok"]
+  },
+  {"conv_name": "thanks",
+    "inputs": ["thank you so much", "thank you for your help", "thanks", "cheers", "thank you"],
+    "outputs": ["No problem, I am happy to help", "No problem, you're welcome"]
+  },
+  {"conv_name": "time",
+    "inputs": ["tell me the time", "what is the time", "what's the time", "what time is it"],
+    "outputs": ["ok"]
+  },
+  {"conv_name": "date",
+    "inputs": ["what date is it today", "what is the date", "what date is it", "what day is it", "what is the date today"],
+    "outputs": ["ok"]
+  },
+  {"conv_name": "bmi",
+    "inputs": ["what is my BMI", "what's my BMI", "my BMI", "body mass index", "what is my body mass index", "check bmi"],
+    "outputs": ["ok"]
+  },
+    {"conv_name": "heart_rate",
+    "inputs": ["check heart rate", "check beats per minute", "heart rate", "check my heart rate", "check bpm"],
+    "outputs": ["ok, place your finger on the heart rate monitor"]
+  },
+  {"conv_name": "start_camera",
+    "inputs": ["start camera", "take photo", "take image", "camera", "take a photo"],
+    "outputs": ["starting camera"]
+  },
+  {"conv_name": "update_weight",
+    "inputs": ["update my weight", "modify weight", "update weight"],
+    "outputs": [""]
+  },
+  {"conv_name": "cancelNOTWORK",
+    "inputs": ["stop", "cancel", "quit", "abort", "abandon"],
+    "outputs": ["ok"]
+  },
+    {"conv_name": "",
+    "inputs": [""],
+    "outputs": [""]
+  },
+    {"conv_name": "positiveIGNORE",
+    "inputs": ["yes", "yeah", "yes please", "confirm"],
+    "outputs": [""]
+  },
+  {"conv_name": "negativeIGNORE",
+    "inputs": ["no", "nope", "negative", "no thanks", "no thank you"],
+    "outputs": [""]
+  },
+  {"conv_name": "incorrect_NOT_USED_YET",
+    "inputs": [""],
+    "outputs": ["sorry, i do not understand", "i do not understand, could you repeat"]
+  }
+]}
