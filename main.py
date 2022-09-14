@@ -20,13 +20,13 @@ __status__ = "Planning"
 
 def conversation():
     """
-           This function opens the 'chat_conv' json file, and listens to voice commands from the user.
-           If a query is recognised from the input array in the json file, an output from the relevant
-           output list will be randomly selected, and spoken. If the input query has a function allocated,
-           these will be included in the 'func_dict' dictionary, and called if queried, using the 'call_func'
-           function. This 'conversation' function also listens for the keyword 'tell me about', which initiates
-           the 'search()' function, with the query as a parameter.
-        """
+       This function opens the 'chat_conv' json file, and listens to voice commands from the user.
+       If a query is recognised from the input array in the json file, an output from the relevant
+       output list will be randomly selected, and spoken. If the input query has a function allocated,
+       these will be included in the 'func_dict' dictionary, and called if queried, using the 'call_func'
+       function. This 'conversation' function also listens for the keyword 'tell me about', which initiates
+       the 'search()' function, with the query as a parameter.
+    """
     with open("chat_conv.json", "r") as chat_file:
         chat_dict = json.load(chat_file)
     while True:
@@ -41,8 +41,6 @@ def conversation():
                     call_func(func)
                     continue
 
-# def cancel():
-#     start()
 
 # functions dictionary to be called
 func_dict = {
@@ -52,7 +50,8 @@ func_dict = {
     "bmi": get_bmi,
     "heart_rate": get_heart_rate,
     "start_camera": start_camera,
-    "update_weight": update_weight
+    "update_weight": update_weight,
+    "diagnosis": start_diagnosis
 }
 
 

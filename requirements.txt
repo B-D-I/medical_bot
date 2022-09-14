@@ -4,6 +4,5 @@ pyserial~=3.5
 pyttsx3~=2.90
 PyAudio~=0.2.12
 tweepy~=4.10.1
-keras~=2.10.0
 picamera~=1.13
 wikipedia~=1.4.0

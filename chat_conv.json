@@ -49,11 +49,11 @@
     "outputs": ["ok"]
   },
   {"conv_name": "bmi",
-    "inputs": ["what is my BMI", "what's my BMI", "my BMI", "body mass index", "what is my body mass index", "check bmi"],
+    "inputs": ["what is my BMI", "what's my BMI", "my BMI", "body mass index", "what is my body mass index", "check bmi", "get bmi"],
     "outputs": ["ok"]
   },
     {"conv_name": "heart_rate",
-    "inputs": ["check heart rate", "check beats per minute", "heart rate", "check my heart rate", "check bpm"],
+    "inputs": ["check heart rate", "check beats per minute", "heart rate", "check my heart rate", "check bpm", "get heart rate"],
     "outputs": ["ok, place your finger on the heart rate monitor"]
   },
   {"conv_name": "start_camera",
@@ -64,24 +64,24 @@
     "inputs": ["update my weight", "modify weight", "update weight"],
     "outputs": [""]
   },
-  {"conv_name": "cancelNOTWORK",
-    "inputs": ["stop", "cancel", "quit", "abort", "abandon"],
+  {"conv_name": "diagnosis",
+    "inputs": ["start diagnosis", "diagnosis", "diagnose me", "begin diagnosis"],
     "outputs": ["ok"]
   },
     {"conv_name": "",
     "inputs": [""],
     "outputs": [""]
   },
-    {"conv_name": "positiveIGNORE",
-    "inputs": ["yes", "yeah", "yes please", "confirm"],
-    "outputs": [""]
-  },
-  {"conv_name": "negativeIGNORE",
-    "inputs": ["no", "nope", "negative", "no thanks", "no thank you"],
-    "outputs": [""]
-  },
-  {"conv_name": "incorrect_NOT_USED_YET",
+    {"conv_name": "",
     "inputs": [""],
-    "outputs": ["sorry, i do not understand", "i do not understand, could you repeat"]
+    "outputs": [""]
+  },
+  {"conv_name": "",
+    "inputs": [""],
+    "outputs": [""]
+  },
+  {"conv_name": "",
+    "inputs": [""],
+    "outputs": [""]
   }
 ]}

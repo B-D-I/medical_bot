@@ -4,9 +4,8 @@ import datetime
 import random
 import time
 import statistics
-
-from typing import Union
 from time import sleep
+from typing import Union
 
 # Arduino
 import serial

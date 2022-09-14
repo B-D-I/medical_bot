@@ -42,64 +42,31 @@ class MedBot:
         speech.speak("The time is" + time_hour + "Hours and" + time_min + "Minutes")
 
     @staticmethod
-    def search(query):
+    def search(query, is_test: bool):
         """
         When called will use the Wikipedia module to carry out a search of user's query. The 'tell me about' keyword is
         removed, to ensure only the relevant query is searched. The information will then be outputted, unless there query
         is too unambiguous, in which case the user will be told to rectify the command.
+        :param is_test: whether function is being called for unit testing
         :param query: This is imported from the conversation() function, and contains the string format of
         the user's spoken query.
         :return: The required information will be outputted, or user will be notified to be more specific.
         """
         # Remove the query command, and search user input
         query = query.replace("tell me about", "")
-        # while True:
         try:
             # place the result into a variable. confirm amount of sentences spoken
             result = wikipedia.summary(query, sentences=3)
-            speech.speak(result)
+            if not is_test:
+                speech.speak(result)
+            else:
+                print(result)
         # This exception is used if the user searches an unambiguous or too broad a query
         except wikipedia.exceptions.DisambiguationError as error:
-            print(error)
-            speech.speak(
-                f"sorry, that query is too broad, could you try again and re-phrase what you would like to "
-                f"search")
-            # finally:
-            #     break
-
-    # would you like to hear more?
-    # # an attempt to listen for a 'stop' during speak. not work
-    # while True:
-    #     listen = takeCommand().lower()
-    #     if 'stop' in listen:
-    #         break
-    #     speak(result)   # need a 'would like to continue?' option.. or way to break
-
-# def alert():
-#     """
-#     When called, will confirm if alert(s) are to go ahead. If so, Twitter access tokens and information are taken from
-#     credentials. To ensure a tweet has a unique code, the random.randint method is used. A tweet will be posted, along
-#     with an email and Alexa notification to the specified locations. Also, the Arduino 'alert' function will be called
-#     initiating an alarm.
-#     :return: twitter, email, alexa, arduino alerts
-#     """
-#     while True:
-#         # try / except
-#         speech.speak('are you sure you wish to send an alert? ')
-#         response = speech.receive_command().lower()
-#         if response in speech.confirmation:
-#             alerts.alexa_alert(access_code_alexa)
-#             alerts.twitter_alert(api_key, api_secret, access_token, access_token_secret)
-#             alerts.email_alert(smtp_server, port, sender_email, receiver_email, password)
-#             speech.speak("alerts have been sent")
-#             usb.write(b'alert')
-#             print('alerts sent')
-#             break
-#         else:
-#             speech.speak('alerts have not been sent')
-#             break
-
-
-# med = MedBot()
-# med.tell_time()
-# med.tell_day()
+            if not is_test:
+                print(error)
+                speech.speak(
+                    f"sorry, that query is too broad, could you try again and re-phrase what you would like to "
+                    f"search")
+            else:
+                print(error)

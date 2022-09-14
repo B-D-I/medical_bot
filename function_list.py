@@ -5,6 +5,7 @@ from med_bot import MedBot
 from patient import Patient
 from image_classification import ImageClassification
 from emergency_alert import EmergencyAlert
+from diagnosis import DiagnosisAPI
 
 
 speech = VoiceControl()
@@ -12,6 +13,7 @@ image = ImageClassification()
 patient = Patient('nathan')
 alert = EmergencyAlert(patient.name)
 bot = MedBot()
+diagnose = DiagnosisAPI()
 
 
 def tell_time():
@@ -23,7 +25,7 @@ def tell_day():
 
 
 def search(query):
-    bot.search(query)
+    bot.search(query, False)
 
 
 def send_all_alerts():
@@ -47,8 +49,7 @@ def get_bmi():
     speech.speak("would you like some advice regarding these results")
     query = speech.receive_command()
     if query in speech.confirmation:
-        # web_scrape(bmi_weight)
-        speech.speak("no function yet")
+        search(f'healthy weight')
 
 
 def get_heart_rate():
@@ -66,4 +67,20 @@ def start_camera():
     image.start_camera()
 
 
+def start_diagnosis():
+    speech.speak('starting diagnosis, please state your symptom')
+    query = speech.receive_command()
+    symptom_dict = diagnose.symptom_dict
+    if query in symptom_dict.keys():
+        symptom_id = symptom_dict.get(query)
+        evidence = [{"id": f"{symptom_id}", "choice_id": "present", "source": "initial"}]
+        d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
+        print(d['question'])
+        speech.speak(d['question']['text'])
+        items = d['question']['item']
+
+
+# get symptoms:
+# symp = diagnose.get_symptom_list(age)
+# print(symp[5])
 
