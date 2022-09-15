@@ -34,9 +34,8 @@ class MedBot:
 
     @staticmethod
     def tell_time():
-        # Place the string format of time into time variable
+        # Place the string format of time into time variable -> then sliced for specific values
         time = str(datetime.datetime.now())
-        # sliced for specific values
         time_hour = time[11:13]
         time_min = time[14:16]
         speech.speak("The time is" + time_hour + "Hours and" + time_min + "Minutes")

@@ -6,7 +6,7 @@ from modules import Union
 class Database:
 
     def __init__(self):
-        self.conn = sqlite3.connect('patient_database.db')
+        self.conn = sqlite3.connect("patient_database.db")
         self.c = self.conn.cursor()
 
     def get_db_data(self, required_col: str, table_name: str, col_name: str,  value: Union[str, int, float]):
@@ -65,9 +65,3 @@ class Database:
         except sqlError as error:
             print(error)
 
-
-# database = Database()
-# database.create_patients_table()
-# database.create_patient('patients', 'nathan', 'male', 1990, 176, 90, 1, 0)
-# database.delete_from_db('patients', 'first_name', 'nathan')
-# print(database.get_all_table_data('patients'))

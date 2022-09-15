@@ -88,11 +88,10 @@ class Patient:
         """
         This function initiates the heart_rate function from the Arduino. First a green led will light to inform the user
         to place finger on the sensor. Once a pulse is recognised, the green led turn off and a red led will flash
-        intermittently until the function is complete. Numerous bpm readings will be appended to a list, and an average bpm
-        will be spoken.
+        intermittently until the function is complete. Numerous bpm readings will be appended to a list, and an average
+        BPM will be spoken.
         :return: the average beats per minute of the user
         """
-        # while True:
         heart_rate_limit = 0
         heart_rates = []
         # heart_rate_limit to ensure a suitable amount of heart rate readings
@@ -116,16 +115,4 @@ class Patient:
                     return av_heart_rate
                 except TypeError or ValueError as error:
                     print('Error: ', error)
-                    # finally:
-                    #     break
-            # break
 
-# patient = Patient('nathan')
-# print(patient.birth_year)
-# print(patient.get_age())
-# print(patient.height)
-# print(patient.body_mass)
-# # print(patient.bmi)
-# # patient.update_weight()
-# av_heart_rate = patient.heart_rate()
-# speech.speak(f"your heart rate is {str(av_heart_rate)} beats per minute {patient.name}")

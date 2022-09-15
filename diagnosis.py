@@ -5,7 +5,7 @@ import infermedica_api
 class DiagnosisAPI:
 
     def __init__(self):
-        self.BASE_URL = "https://api.infermedica.com/v3"
+        self.BASE_URL = 'https://api.infermedica.com/v3'
         self.api = infermedica_api.APIv3Connector(app_id=app_id, app_key=app_keys)
         # dev_mode=True, model="infermedica-en"
 
@@ -29,4 +29,16 @@ class DiagnosisAPI:
     def get_symptom_list(self, age):
         age_unit = 'year'
         return self.api.symptom_list(age=age, age_unit=age_unit)
+
+    def search_symptoms(self, symptom_str, age):
+        search_res = []
+        for i in symptom_str:
+            res = self.api.search(i, age=age)
+            for k in res:
+                res_p = {}
+                res_p['id'] = str(k[str('id')])
+                res_p['label'] = str(k[str('label')])
+                search_res.append(res_p)
+                res_p = None
+            return search_res
 

@@ -2,12 +2,6 @@ import pyttsx3
 import speech_recognition as sr
 import pyaudio
 
-# Mic Test
-# test mic: https://makersportal.com/blog/2018/8/23/recording-audio-on-the-raspberry-pi-with-python-and-a-usb-microphone
-# p = pyaudio.PyAudio()
-# for ii in range(p.get_device_count()):
-#     print(p.get_device_info_by_index(ii).get('name'))
-
 
 class VoiceControl:
 
@@ -37,14 +31,10 @@ class VoiceControl:
                 # Language set to English
                 query = self.r.recognize_google(audio, language='en')
                 print("command: ", query)
-            # Command not recognised
-            except sr.UnknownValueError as error:
+            except sr.UnknownValueError or sr.RequestError as error:
                 print(error)
                 print("Not Recognised")
                 return "None"
-            # Unable to request
-            except sr.RequestError:
-                print("Request Error")
             return query
 
     @staticmethod
@@ -58,22 +48,16 @@ class VoiceControl:
         :return: text converted to audio
         """
         engine = pyttsx3.init()
-
         # rate properties
         rate = engine.getProperty("rate")
         engine.setProperty('rate', 2.0)
-
-        # volume properties
+        # volume & voice properties
         volume = engine.getProperty("volume")
         engine.setProperty(volume, 1.0)
-
-        # voice properties
         voices = engine.getProperty("voices")
         for voice in voices:
             engine.setProperty("voice", voices[10].id)
-
         # Enable the script to speak the audio
         engine.say(audio)
-
         # Blocks while processing all currently queued commands
         engine.runAndWait()
