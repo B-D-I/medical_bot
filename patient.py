@@ -116,3 +116,9 @@ class Patient:
                 except TypeError or ValueError as error:
                     print('Error: ', error)
 
+    @property
+    def symptom(self):
+        speech.speak('starting diagnosis, please state your symptom')
+        symptom = speech.receive_command()
+        return symptom
+

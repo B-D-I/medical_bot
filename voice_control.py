@@ -10,7 +10,8 @@ class VoiceControl:
         self.r = sr.Recognizer()
         self.confirmation = ("yes", "yeah", "yes please", "confirm", "please")
         self.negative = ("no", "nope", "negative", "no thanks", "no thank you", "quit", "stop", "cancel", "abort", "abandon")
-        self.over = ('overweight', 'severely overweight', 'obese')
+        self.over = ("overweight", "severely overweight", "obese")
+        self.unsure = ("unsure", "don't know", "do not know", "pass", "unknown", )
 
     def receive_command(self):
         """

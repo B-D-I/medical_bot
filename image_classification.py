@@ -2,7 +2,7 @@ import face_recognition
 import timeout_decorator
 from picamera import PiCamera
 from voice_control import VoiceControl
-from modules import sleep, time
+from modules import sleep
 from tflite_runtime.interpreter import Interpreter
 import numpy as np
 
@@ -46,25 +46,26 @@ class ImageClassification:
 
     @timeout_decorator.timeout(100)
     def facial_recognition(self, patient_name: str):
+        login = False
         try:
             patient_face_encoding = self.encode_patient_image(patient_name)
-            login = False
             while not login:
                 print("Capturing image.")
-                # Grab a single frame of video from the RPi camera as a numpy array
+                # get a single frame of video from camera as numpy array
                 self.camera.capture(self.output, format="rgb")
-                # Find all the faces and face encodings in the current frame of video
+                # find all the faces and face encodings in current video
                 face_locations = face_recognition.face_locations(self.output)
                 print("Found {} faces in image.".format(len(face_locations)))
                 face_encodings = face_recognition.face_encodings(self.output, face_locations)
-                # Loop over each face found in the frame to see if it's someone we know.
+                # loop over each face found in frame to confirm if recognised
                 for face_encoding in face_encodings:
-                    # See if the face is a match for the known face(s)
+                    # confirm if face is a match
                     match = face_recognition.compare_faces([patient_face_encoding], face_encoding)
-                    name = " Unknown Person "
                     if match[0]:
-                        print(f"Recognised {patient_name}")
+                        print(f'Recognised {patient_name}')
                         login = True
+                    else:
+                        print('Unknown user')
         except timeout_decorator.timeout_decorator.TimeoutError as error:
             print(error)
         return login
@@ -79,8 +80,3 @@ class ImageClassification:
     #         print('cancer')
     #     else:
     #         print('not cancer')
-
-# classify = ImageClassification()
-# classify.predict_images('images/nathan.jpg')
-# classify.take_face_images()
-# classify.facial_recognition('nathan')

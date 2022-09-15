@@ -78,6 +78,7 @@ def face_login():
 if __name__ == "__main__":
     while True:
         if speech.receive_command() == 'log in':
+            speech.speak('to login, face the camera for facial recognition')
             face_login()
 
 

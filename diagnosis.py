@@ -12,16 +12,6 @@ class DiagnosisAPI:
     def print_api_info(self):
         print(self.api.info())
 
-    @property
-    def symptom_dict(self):
-        symptom_dict = {
-            'fever': 's_98',
-            'headache': 's_21',
-            'knee_pain': 's_581',
-            'colic stomach pain': 's_1848'
-        }
-        return symptom_dict
-
     def diagnosis(self, evidence, age, gender):
         request = self.api.diagnosis(evidence=evidence, age=age, sex=gender)
         return request
