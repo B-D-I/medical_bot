@@ -56,9 +56,13 @@
     "inputs": ["check heart rate", "check beats per minute", "heart rate", "check my heart rate", "check bpm", "get heart rate"],
     "outputs": ["ok, place your finger on the heart rate monitor"]
   },
-  {"conv_name": "start_camera",
-    "inputs": ["start camera", "take photo", "take image", "camera", "take a photo"],
+  {"conv_name": "take_skin_photo",
+    "inputs": ["take skin photo", "take skin image", "camera for skin", "take a skin photo"],
     "outputs": ["starting camera"]
+  },
+  {"conv_name": "take_face_photo",
+  "inputs": ["take face photo", "take face image", "camera for face", "take a face photo"],
+  "outputs": ["starting camera"]
   },
   {"conv_name": "update_weight",
     "inputs": ["update my weight", "modify weight", "update weight"],
@@ -68,9 +72,9 @@
     "inputs": ["start diagnosis", "diagnosis", "diagnose me", "begin diagnosis"],
     "outputs": ["ok"]
   },
-    {"conv_name": "",
-    "inputs": [""],
-    "outputs": [""]
+    {"conv_name": "face_login",
+    "inputs": ["login", "log in", "logon", "log on", "start app", "start"],
+    "outputs": ["starting camera for login"]
   },
     {"conv_name": "",
     "inputs": [""],

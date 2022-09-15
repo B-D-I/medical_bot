@@ -49,9 +49,11 @@ func_dict = {
     "alert": send_all_alerts,
     "bmi": get_bmi,
     "heart_rate": get_heart_rate,
-    "start_camera": start_camera,
+    "take_skin_photo": take_skin_photo,
+    "take_face_photo": take_face_photo,
     "update_weight": update_weight,
     "diagnosis": start_diagnosis
+    # "face_login": face_login
 }
 
 
@@ -67,8 +69,16 @@ def start():
     conversation()
 
 
+def face_login():
+    if image.facial_recognition(patient.name):
+        speech.speak(f'logged in as {patient.name}')
+        start()
+
+
 if __name__ == "__main__":
-    start()
+    while True:
+        if speech.receive_command() == 'log in':
+            face_login()
 
 
 

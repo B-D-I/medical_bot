@@ -62,9 +62,14 @@ def update_weight():
     patient.update_weight()
 
 
-def start_camera():
-    speech.speak('in ten seconds three images will be taken, ensure you adjust the focus')
-    image.start_camera()
+def take_face_photo():
+    speech.speak('please confirm your first name')
+    username = speech.receive_command()
+    image.take_image(2, username)
+
+
+def take_skin_photo():
+    image.take_image(3, 'skin')
 
 
 def start_diagnosis():
@@ -100,4 +105,5 @@ def get_confirmed_symptom(symptom_str: str):
 # print(get_symptoms(symp))
 # get_confirmed_symptom(symp)
 # start_diagnosis()
-# get_symptom_id('symp')
+
+
