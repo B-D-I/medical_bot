@@ -136,21 +136,32 @@ def respond_diagnosis(symptom_id, choice_id):
 
 # seems to repeat in loop?
 def read_and_respond(symptom_id, choice_id):
-    if choice_id == 'unknown':
+    if choice_id == 'initial':
         evidence = [{'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'}]
     else:
-        evidence = [{'id': f'{symptom_id}', 'choice_id': f'{choice_id}', 'source': 'initial'}]
+        evidence = [{'id': f'{symptom_id}', 'choice_id': f'{choice_id}'}]
     d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
-    # speak
     print(d['question'])
-    for item in d['question']['items']:
-        # speak
-        print(item['name'])
-        id = item['id']
-        # receive
-        response = input('present, absent or unknown: ').lower()
-        if response == 'present':
-            read_and_respond(id, 'present')
+    if d['question'] is not None:
+        # print(d['question']['text'])
+        speech.speak(d['question']['text'])
+        for item in d['question']['items']:
+            # speak
+            speech.speak(item['name'])
+            # print(item['name'])
+            id = item['id']
+            print(id)
+            # receive
+            # response = input('present, absent or unknown: ').lower()
+            response = speech.receive_command()
+            # if response.lower() == 'present':
+            if return_choice(response) == 'present':
+                read_and_respond(id, 'present')
+    else:
+        print('make appointment')
+    # except TypeError as error:
+    #     print(error)
+    #     print(d['question'])
 
 
 
@@ -174,8 +185,14 @@ def read_and_respond(symptom_id, choice_id):
 # initial_respond_diagnosis('s_98')
 # respond_diagnosis('s_143', 'present')
 
-read_and_respond('s_98', 'unknown')
+read_and_respond('s_21', 'initial')
 
+# 's_1201'
+# 's_264'
+# 's_2089'
+# evidence = [{'id': 's_445', 'choice_id': 'present', 'source': 'suggest'}]
+# d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
+# print(d)
 
 
 
