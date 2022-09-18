@@ -69,3 +69,4 @@ class MedBot:
                     f"search")
             else:
                 print(error)
+

@@ -1,6 +1,7 @@
 from credentials import *
 from voice_control import VoiceControl
 import infermedica_api
+import infermedica_api.exceptions
 
 speech = VoiceControl()
 
@@ -42,4 +43,3 @@ class DiagnosisAPI:
         elif response in speech.unsure:
             choice_id = 'unknown'
         return choice_id
-

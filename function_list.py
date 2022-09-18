@@ -1,5 +1,6 @@
+import infermedica_api.exceptions
 from credentials import *
-from modules import usb
+from modules import usb, json, random
 from voice_control import VoiceControl
 from med_bot import MedBot
 from patient import Patient
@@ -81,49 +82,11 @@ def take_skin_photo():
 def confirm_symptom():
     symptom = patient.symptom
     symptoms = diagnose.search_symptoms(symptom, patient.get_age())
-    # print('please confirm the symptom you are experiencing')
     speech.speak('please confirm the symptom you are experiencing')
     for symptom in symptoms:
-        # print(symptom['label'])
         speech.speak(symptom['label'])
     confirmed_symptom = speech.receive_command()
-    # confirmed_symptom = input('')
     for symp in symptoms:
         if symp['label'].lower().replace(',', '') == confirmed_symptom:
             return symp['id']
 
-
-def diagnose_respond(isInitial: bool):
-    if isInitial:
-        diagnose.evidence.clear()
-        symptom_id = confirm_symptom()
-        diagnose.evidence.append({'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'})
-    d = diagnose.diagnosis(diagnose.evidence, patient.get_age(), patient.gender)
-    print(d['question'])
-    print(d['question']['text'])
-    speech.speak(d['question']['text'])
-    # if d['question']['text'] is not None:
-    for item in d['question']['items']:
-        speech.speak(item['name'])
-        print(item['name'])
-        id = item['id']
-        print(id)
-        print(diagnose.evidence)
-        # receive
-        # response = input('present, absent or unknown: ').lower()
-        response = speech.receive_command()
-        choice = diagnose.return_choice(response)
-        diagnose.evidence.append({'id': id, 'choice_id': choice})
-        # if response.lower() == 'present':
-        #     diagnose.evidence.append({'id': id, 'choice_id': 'present'})
-        #     print(diagnose.evidence)
-        #     diagnose_respond(False)
-        # elif response.lower() == 'absent':
-        #     diagnose.evidence.append({'id': id, 'choice_id': 'absent'})
-        #     diagnose_respond(False)
-        # else:
-        #     diagnose.evidence.append({'id': id, 'choice_id': 'unknown'})
-        #     diagnose_respond(False)
-
-
-diagnose_respond(True)
