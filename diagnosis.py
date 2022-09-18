@@ -1,5 +1,8 @@
 from credentials import *
+from voice_control import VoiceControl
 import infermedica_api
+
+speech = VoiceControl()
 
 
 class DiagnosisAPI:
@@ -8,6 +11,7 @@ class DiagnosisAPI:
         self.BASE_URL = 'https://api.infermedica.com/v3'
         self.api = infermedica_api.APIv3Connector(app_id=app_id, app_key=app_keys)
         # dev_mode=True, model="infermedica-en"
+        self.evidence = []
 
     def print_api_info(self):
         print(self.api.info())
@@ -15,10 +19,6 @@ class DiagnosisAPI:
     def diagnosis(self, evidence, age, gender):
         request = self.api.diagnosis(evidence=evidence, age=age, sex=gender)
         return request
-
-    def get_symptom_list(self, age):
-        age_unit = 'year'
-        return self.api.symptom_list(age=age, age_unit=age_unit)
 
     def search_symptoms(self, symptom_str, age):
         search_res = []
@@ -31,4 +31,15 @@ class DiagnosisAPI:
                 search_res.append(res_p)
                 res_p = None
             return search_res
+
+    @staticmethod
+    def return_choice(response):
+        choice_id = ''
+        if response in speech.confirmation:
+            choice_id = 'present'
+        elif response in speech.negative:
+            choice_id = 'absent'
+        elif response in speech.unsure:
+            choice_id = 'unknown'
+        return choice_id
 

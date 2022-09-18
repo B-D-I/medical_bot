@@ -52,8 +52,7 @@ func_dict = {
     "take_skin_photo": take_skin_photo,
     "take_face_photo": take_face_photo,
     "update_weight": update_weight,
-    "diagnosis": start_diagnosis
-    # "face_login": face_login
+    "diagnosis": confirm_symptom()
 }
 
 

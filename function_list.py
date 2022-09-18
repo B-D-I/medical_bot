@@ -55,6 +55,12 @@ def get_bmi():
 def get_heart_rate():
     av_heart_rate = patient.heart_rate()
     speech.speak(f'your heart rate is {str(av_heart_rate)} beats per minute {patient.name}')
+    if int(av_heart_rate) < 60:
+        speech.speak('this is a low resting heart rate')
+    elif int(av_heart_rate) > 100:
+        speech.speak('this is a high resting heart rate')
+    else:
+        speech.speak('this is an average resting heart rate')
 
 
 def update_weight():
@@ -72,127 +78,52 @@ def take_skin_photo():
     image.take_image(3, 'skin')
 
 
-
-
-
-# get symptoms:
-# symp = diagnose.get_symptom_list(age)
-# print(symp[5])
-def get_symptoms():
+def confirm_symptom():
     symptom = patient.symptom
     symptoms = diagnose.search_symptoms(symptom, patient.get_age())
-    return symptoms
-
-
-def confirm_symptom():
-    symptoms = get_symptoms()
+    # print('please confirm the symptom you are experiencing')
     speech.speak('please confirm the symptom you are experiencing')
     for symptom in symptoms:
+        # print(symptom['label'])
         speech.speak(symptom['label'])
     confirmed_symptom = speech.receive_command()
+    # confirmed_symptom = input('')
     for symp in symptoms:
         if symp['label'].lower().replace(',', '') == confirmed_symptom:
             return symp['id']
 
 
-def return_choice(response):
-    choice_id = ''
-    if response in speech.confirmation:
-        choice_id = 'present'
-    elif response in speech.negative:
-        choice_id = 'absent'
-    elif response in speech.unsure:
-        choice_id = 'unknown'
-    return choice_id
-
-
-def initial_respond_diagnosis(symptom_id: str):
-    evidence = [{'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'}]
-    d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
-    # speech.speak(d['question']['text'])
-    # choice = speech.receive_command()
+def diagnose_respond(isInitial: bool):
+    if isInitial:
+        diagnose.evidence.clear()
+        symptom_id = confirm_symptom()
+        diagnose.evidence.append({'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'})
+    d = diagnose.diagnosis(diagnose.evidence, patient.get_age(), patient.gender)
     print(d['question'])
-    choice = input(d['question']['text'])
-    choice_id = return_choice(choice)
-    resp_id = ''
-    for i in d['question']['items']:
-        resp_id = i['id']
-    print(choice_id, ' ', resp_id)
-    # respond_diagnosis(resp_id, choice_id)
+    print(d['question']['text'])
+    speech.speak(d['question']['text'])
+    # if d['question']['text'] is not None:
+    for item in d['question']['items']:
+        speech.speak(item['name'])
+        print(item['name'])
+        id = item['id']
+        print(id)
+        print(diagnose.evidence)
+        # receive
+        # response = input('present, absent or unknown: ').lower()
+        response = speech.receive_command()
+        choice = diagnose.return_choice(response)
+        diagnose.evidence.append({'id': id, 'choice_id': choice})
+        # if response.lower() == 'present':
+        #     diagnose.evidence.append({'id': id, 'choice_id': 'present'})
+        #     print(diagnose.evidence)
+        #     diagnose_respond(False)
+        # elif response.lower() == 'absent':
+        #     diagnose.evidence.append({'id': id, 'choice_id': 'absent'})
+        #     diagnose_respond(False)
+        # else:
+        #     diagnose.evidence.append({'id': id, 'choice_id': 'unknown'})
+        #     diagnose_respond(False)
 
 
-def respond_diagnosis(symptom_id, choice_id):
-    evidence = [{'id': f'{symptom_id}', 'choice_id': f'{choice_id}', 'source': 'initial'}]
-    d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
-    # speech.speak(d['question']['text'])
-    # choice = speech.receive_command()
-    choice = input(d['question']['text'])
-    choice_id = return_choice(choice)
-    resp_id = ''
-    for i in d['question']['items']:
-        resp_id = i['id']
-    print(choice_id, ' ', resp_id)
-    # respond_diagnosis(resp_id, choice_id)
-
-# seems to repeat in loop?
-def read_and_respond(symptom_id, choice_id):
-    if choice_id == 'initial':
-        evidence = [{'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'}]
-    else:
-        evidence = [{'id': f'{symptom_id}', 'choice_id': f'{choice_id}'}]
-    d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
-    print(d['question'])
-    if d['question'] is not None:
-        # print(d['question']['text'])
-        speech.speak(d['question']['text'])
-        for item in d['question']['items']:
-            # speak
-            speech.speak(item['name'])
-            # print(item['name'])
-            id = item['id']
-            print(id)
-            # receive
-            # response = input('present, absent or unknown: ').lower()
-            response = speech.receive_command()
-            # if response.lower() == 'present':
-            if return_choice(response) == 'present':
-                read_and_respond(id, 'present')
-    else:
-        print('make appointment')
-    # except TypeError as error:
-    #     print(error)
-    #     print(d['question'])
-
-
-
-# def start_diagnosis():
-#     symptom = patient.symptom
-#     symptom_dict = diagnose.symptom_dict
-#     if symptom in symptom_dict.keys():
-#         symptom_id = symptom_dict.get(symptom)
-#         evidence = [{'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'}]
-#         d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
-#         print(d['question'])
-#         speech.speak(d['question']['text'])
-#         items = d['question']['item']
-
-"""         'fever': 's_98',
-            'headache': 's_21',
-            'knee_pain': 's_581',
-            'colic stomach pain': 's_1848'
-    """
-# get_confirmed_symptom()
-# initial_respond_diagnosis('s_98')
-# respond_diagnosis('s_143', 'present')
-
-read_and_respond('s_21', 'initial')
-
-# 's_1201'
-# 's_264'
-# 's_2089'
-# evidence = [{'id': 's_445', 'choice_id': 'present', 'source': 'suggest'}]
-# d = diagnose.diagnosis(evidence, patient.get_age(), patient.gender)
-# print(d)
-
-
-
+diagnose_respond(True)

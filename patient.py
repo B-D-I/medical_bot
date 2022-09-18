@@ -111,13 +111,13 @@ class Patient:
                 heart_rates.remove(rates)
                 try:
                     av_heart_rate = int(statistics.median(heart_rates))
-                    # speech.speak(f"your heart rate is {str(av_heart_rate)} beats per minute {self.name}")
                     return av_heart_rate
                 except TypeError or ValueError as error:
                     print('Error: ', error)
 
     @property
     def symptom(self):
+        # symptom = input('starting diagnosis, please state your symptom')
         speech.speak('starting diagnosis, please state your symptom')
         symptom = speech.receive_command()
         return symptom
