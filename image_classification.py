@@ -16,7 +16,7 @@ class ImageClassification:
 
     def __init__(self):
         self.camera = PiCamera()
-        self.skin_lesion_model = 'converted_model.tflite'
+        self.skin_lesion_model = '/models/converted_model.tflite'
 
     def load_tflite_model(self):
         with open(self.skin_lesion_model, 'rb') as f:

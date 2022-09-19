@@ -92,7 +92,7 @@ def diagnosis():
     diagnose_respond(True)
 
 
-# functions dictionary to be called during coversation
+# functions dictionary to be called during conversation
 func_dict = {
     "time": tell_time,
     "date": tell_day,
