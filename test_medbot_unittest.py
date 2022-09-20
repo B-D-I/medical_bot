@@ -1,13 +1,21 @@
+import os
 import unittest
 from database import Database
 from med_bot import MedBot
 from patient import Patient
+from image_classification import ImageClassification
+from voice_control import VoiceControl
+from diagnosis import DiagnosisAPI
+from credentials import conditions_hash, lesions_hash
 import wikipedia.exceptions
 import datetime
 
 db = Database()
 bot = MedBot()
 patient = Patient('nathan')
+image = ImageClassification()
+diagnosis = DiagnosisAPI()
+speech = VoiceControl()
 
 
 class TestMedBotFunctions(unittest.TestCase):
@@ -40,6 +48,42 @@ class TestMedBotFunctions(unittest.TestCase):
         age = int(current_year) - patient.birth_year
         self.assertEqual(result, age)
         self.assertIsNotNone(result)
+
+    def test_infermedica_api_connection(self):
+        result = diagnosis.return_api_info()
+        self.assertIsNotNone(result)
+
+    def test_choice_response(self):
+        # confirm possible response choices correlate to the api choice id
+        for i in speech.confirmation:
+            self.assertEqual(diagnosis.return_choice(i), 'present')
+        for j in speech.negative:
+            self.assertEqual(diagnosis.return_choice(j), 'absent')
+        for l in speech.unsure:
+            self.assertEqual(diagnosis.return_choice(l), 'unknown')
+
+    def test_model_integrity(self):
+        self.assertEqual(db.integrity_check('models/converted_conditions_model.tflite'), conditions_hash)
+        self.assertEqual(db.integrity_check('models/converted_lesions_model.tflite'), lesions_hash)
+
+    def test_skin_lesion_model(self):
+        # iterate over test skin lesion files and confirm expected result
+        image_path = f'images/test_lesions/'
+        for filename in os.listdir(image_path):
+            diagnose = image.prediction(image_path, 'lesions', filename)
+            # get name of files (without ext), then compare with classification
+            file = diagnose[0][:-5]
+            self.assertIsNotNone(diagnose)
+            self.assertEqual(diagnose[1], file)
+
+    def test_skin_conditions_model(self):
+        image_path = f'images/test_conditions/'
+        for filename in os.listdir(image_path):
+            diagnose = image.prediction(image_path, 'conditions', filename)
+            # get filename before extension
+            file = diagnose[0].split('.', 1)[0]
+            self.assertIsNotNone(diagnose)
+            self.assertEqual(diagnose[1], file)
 
 
 if __name__ == '__main__':

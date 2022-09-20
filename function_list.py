@@ -1,4 +1,3 @@
-import infermedica_api.exceptions
 from credentials import *
 from modules import usb, json, random
 from voice_control import VoiceControl
@@ -15,6 +14,40 @@ patient = Patient('nathan')
 alert = EmergencyAlert(patient.name)
 bot = MedBot()
 diagnose = DiagnosisAPI()
+
+
+def diagnose_skin_photo():
+    speech.speak('confirm if image is of a mole or other skin condition')
+    skin_issue = speech.receive_command()
+    if skin_issue in diagnose.lesions:
+        image.return_skin_diagnosis('lesions')
+    elif skin_issue in diagnose.condition:
+        image.return_skin_diagnosis('conditions')
+    else:
+        speech.speak('not recognised')
+
+
+def confirm_symptom():
+    symptom = patient.symptom
+    symptoms = diagnose.search_symptoms(symptom, patient.get_age())
+    speech.speak('please confirm the symptom you are experiencing')
+    for symptom in symptoms:
+        speech.speak(symptom['label'])
+    confirmed_symptom = speech.receive_command()
+    for symp in symptoms:
+        if symp['label'].lower().replace(',', '') == confirmed_symptom:
+            return symp['id']
+
+
+def take_face_photo():
+    speech.speak('please confirm your first name')
+    username = speech.receive_command()
+    image.take_image(2, username)
+
+
+def set_camera():
+    speech.speak('camera will preview for one minute')
+    image.show_camera_preview()
 
 
 def tell_time():
@@ -67,26 +100,4 @@ def get_heart_rate():
 def update_weight():
     speech.speak(f'your current weight is {patient.weight} kilos')
     patient.update_weight()
-
-
-def take_face_photo():
-    speech.speak('please confirm your first name')
-    username = speech.receive_command()
-    image.take_image(2, username)
-
-
-def take_skin_photo():
-    image.take_image(3, 'skin')
-
-
-def confirm_symptom():
-    symptom = patient.symptom
-    symptoms = diagnose.search_symptoms(symptom, patient.get_age())
-    speech.speak('please confirm the symptom you are experiencing')
-    for symptom in symptoms:
-        speech.speak(symptom['label'])
-    confirmed_symptom = speech.receive_command()
-    for symp in symptoms:
-        if symp['label'].lower().replace(',', '') == confirmed_symptom:
-            return symp['id']
 

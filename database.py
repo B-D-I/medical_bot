@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3 import Error as sqlError
 from modules import Union
+from hashlib import sha256
 
 
 class Database:
@@ -65,3 +66,8 @@ class Database:
         except sqlError as error:
             print(error)
 
+    @staticmethod
+    def integrity_check(file_path):
+        with open(file_path, 'rb') as f:
+            file = f.read()
+            return sha256(file).hexdigest()

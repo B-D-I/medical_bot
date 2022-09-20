@@ -56,8 +56,8 @@
     "inputs": ["check heart rate", "check beats per minute", "heart rate", "check my heart rate", "check bpm", "get heart rate"],
     "outputs": ["ok, place your finger on the heart rate monitor"]
   },
-  {"conv_name": "take_skin_photo",
-    "inputs": ["take skin photo", "take skin image", "camera for skin", "take a skin photo"],
+  {"conv_name": "diagnose_skin_photo",
+    "inputs": ["take skin photo", "take skin image", "camera for skin", "take a skin photo", "check mole", "check lesion", "mole photo", "lesion photo", "check skin", "check skin condition", "check for skin condition", "diagnose skin", "skin diagnosis"],
     "outputs": ["starting camera"]
   },
   {"conv_name": "take_face_photo",
@@ -76,9 +76,9 @@
     "inputs": ["login", "log in", "logon", "log on", "start app", "start"],
     "outputs": ["starting camera for login"]
   },
-    {"conv_name": "",
-    "inputs": [""],
-    "outputs": [""]
+    {"conv_name": "set_camera",
+    "inputs": ["set camera", "configure camera", "adjust camera", "camera preview"],
+    "outputs": ["starting camera for adjustment"]
   },
   {"conv_name": "",
     "inputs": [""],

@@ -7,6 +7,8 @@ speech = VoiceControl()
 
 
 class DiagnosisAPI:
+    lesions = ['mole', 'lesions', 'mole check', 'lesion check', 'moles', 'lesion']
+    condition = ['skin conditions', 'rash skin', 'other conditions', 'other', 'other skin condition', 'rash']
 
     def __init__(self):
         self.BASE_URL = 'https://api.infermedica.com/v3'
@@ -14,8 +16,8 @@ class DiagnosisAPI:
         # dev_mode=True, model="infermedica-en"
         self.evidence = []
 
-    def print_api_info(self):
-        print(self.api.info())
+    def return_api_info(self):
+        return self.api.info()
 
     def diagnosis(self, evidence, age, gender):
         request = self.api.diagnosis(evidence=evidence, age=age, sex=gender)

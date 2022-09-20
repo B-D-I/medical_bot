@@ -1,8 +1,7 @@
 from function_list import *
-
+import infermedica_api.exceptions
 """
 Medical Bot: Home Diagnosis Device
-
 
 """
 __author__ = "Nathan Hewett"
@@ -99,10 +98,11 @@ func_dict = {
     "alert": send_all_alerts,
     "bmi": get_bmi,
     "heart_rate": get_heart_rate,
-    "take_skin_photo": take_skin_photo,
+    "diagnose_skin_photo": diagnose_skin_photo,
     "take_face_photo": take_face_photo,
     "update_weight": update_weight,
-    "diagnosis": diagnosis
+    "diagnosis": diagnosis,
+    "set_camera": set_camera
 }
 
 
@@ -111,6 +111,7 @@ if __name__ == "__main__":
         if speech.receive_command() == 'log in':
             speech.speak('to login, face the camera for facial recognition')
             face_login()
+
 
 
 
