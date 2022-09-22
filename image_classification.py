@@ -13,6 +13,7 @@ speech = VoiceControl()
 db = Database()
 camera = Camera()
 
+
 class ImageClassification:
     face_locations = []
     face_encodings = []
@@ -37,7 +38,8 @@ class ImageClassification:
     def take_face_photo():
         camera.take_face_photo()
 
-    def encode_patient_image(self, patient_name: str):
+    @staticmethod
+    def encode_patient_image(patient_name: str):
         # get user image then learn features
         camera.camera.resolution = (320, 240)
         print("Loading known face image")
@@ -78,7 +80,7 @@ class ImageClassification:
         return interpreter
 
     @staticmethod
-    def __return_interpreter_details(interpreter, input_or_output):
+    def __return_interpreter_details(interpreter, input_or_output: str):
         # retrieve model input and output information, including image dimensions
         if input_or_output == 'input':
             return interpreter.get_input_details()
@@ -93,14 +95,14 @@ class ImageClassification:
         print('output type: ', output_details[0]['dtype'])
 
     @staticmethod
-    def return_image_dimensions(filename, image_path: str):
+    def return_image_dimensions(filename: str, image_path: str):
         img_path = image_path + filename
         img = image.load_img(img_path, target_size=(150, 150))
         images = image.img_to_array(img)
         images = np.expand_dims(images, axis=0)
         return images
 
-    def return_prediction(self, image_path: str, image_type, filename):
+    def return_prediction(self, image_path: str, image_type: str, filename: str):
         interpreter = self.__return_interpreter(image_type)
         input_details = self.__return_interpreter_details(interpreter, 'input')
         output_details = self.__return_interpreter_details(interpreter, 'output')
@@ -129,10 +131,10 @@ class ImageClassification:
 
         if image_type == 'lesions':
             if tflite_predict == 0:
-                diagnosed = 'malignant lesion'
+                diagnosed = 'Malignant'
                 print('\n', filename, ':  Malignant')
             else:
-                diagnosed = 'benign lesion'
+                diagnosed = 'Benign'
                 print('\n', filename, ':  Benign\n')
             return [filename, diagnosed]
 

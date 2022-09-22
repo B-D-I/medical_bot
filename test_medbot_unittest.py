@@ -10,10 +10,10 @@ from credentials import conditions_hash, lesions_hash
 import wikipedia.exceptions
 import datetime
 
-db = Database()
-bot = MedBot()
 patient = Patient()
 patient.name = 'nathan'
+db = Database()
+bot = MedBot(patient)
 image = ImageClassification()
 diagnosis = DiagnosisAPI()
 speech = VoiceControl()

@@ -26,4 +26,8 @@ class Camera:
     def take_face_photo(self):
         speech.speak('please confirm your first name')
         username = speech.receive_command()
-        self.take_image(2, username)
+        speech.speak(f'in ten seconds your image will be taken, ensure you adjust the focus')
+        self.camera.start_preview()
+        sleep(10)
+        self.camera.capture(f'images/face_rec_images/{username}.jpg')
+        self.camera.stop_preview()

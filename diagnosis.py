@@ -11,6 +11,8 @@ image = ImageClassification()
 class DiagnosisAPI:
     lesions = ['mole', 'lesions', 'mole check', 'lesion check', 'moles', 'lesion']
     condition = ['skin conditions', 'rash skin', 'other conditions', 'other', 'other skin condition', 'rash']
+    diagnosed_cond = ''
+    contagious = False
 
     def __init__(self):
         self.BASE_URL = 'https://api.infermedica.com/v3'
@@ -21,11 +23,11 @@ class DiagnosisAPI:
     def return_api_info(self):
         return self.api.info()
 
-    def diagnosis(self, evidence, age, gender):
+    def diagnosis(self, evidence, age: int, gender: str):
         request = self.api.diagnosis(evidence=evidence, age=age, sex=gender)
         return request
 
-    def search_symptoms(self, symptom_str, age):
+    def search_symptoms(self, symptom_str: str, age: int):
         search_res = []
         for i in symptom_str:
             res = self.api.search(i, age=age)
@@ -38,7 +40,7 @@ class DiagnosisAPI:
             return search_res
 
     @staticmethod
-    def return_choice(response):
+    def return_choice(response: str):
         choice_id = ''
         if response in speech.confirmation:
             choice_id = 'present'
@@ -49,7 +51,7 @@ class DiagnosisAPI:
         return choice_id
 
     @staticmethod
-    def heart_rate_analysis(heart_rate):
+    def heart_rate_analysis(heart_rate: float):
         if int(heart_rate) < 60:
             return 'low'
         elif int(heart_rate) > 100:
@@ -100,6 +102,25 @@ class DiagnosisAPI:
             if symp['label'].lower().replace(',', '') == confirmed_symptom:
                 return symp['id']
 
+    @staticmethod
+    def is_exercise_conv(is_exercise: int):
+        is_ex = None
+        if is_exercise == 0:
+            is_ex = 1
+        if is_exercise == 1:
+            is_ex = 0
+        return is_ex
+
+    def cardio_vascular_check(self):
+        speech.speak(f'your resting heart rate will now be taken to check if it is above average')
+        speech.speak(f'place your finger on the heart rate monitor')
+        heart_rate = self.heart_rate()
+        rate = self.heart_rate_analysis(heart_rate)
+        speech.speak(f'you have a {rate} resting heart rate of {heart_rate}')
+        if heart_rate > 100:
+            return 1
+        else:
+            return 0
 
 
 

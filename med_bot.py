@@ -27,7 +27,7 @@ class MedBot:
             "take_face_photo": image.take_face_photo,
             "set_camera": image.set_camera,
             "update_weight": self.current_patient.update_weight,
-            "diagnosis": self.diagnosis,
+            "diagnosis": self.initial_infermedica_diagnosis,
         }
 
     @staticmethod
@@ -141,25 +141,21 @@ class MedBot:
         rate = diagnose.heart_rate_analysis(av_heart_rate)
         speech.speak(f'this is a {rate} resting heart rate')
 
-    def diagnosis(self):
-        self.diagnose_respond(True, self.current_patient)
+    def initial_infermedica_diagnosis(self):
+        diagnose.evidence.clear()
+        symptom_id = diagnose.confirm_symptom(self.current_patient)
+        diagnose.evidence.append({'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'})
+        self.infermedica_diagnosis()
 
-    def diagnose_respond(self, is_initial: bool, *provided_symptom):
+    def infermedica_diagnosis(self):
         """
-        is_initial: bool,
+        Initial diagnosis evidence array is appended prior to calling this method.
         This recursive function uses the Diagnosis object and Infermedica API to perform real time diagnoses. The user provides
         evidence to be assessed. If a condition is determined at over 70%, it will be given to the user
         :param is_initial: Is the function being called for the first time
-        :return: Function will be called recursively until a diagnosis of over 70%is made
+        :return: Function will be called recursively until a diagnosis of over 70% is made
         """
-        if is_initial:
-            diagnose.evidence.clear()
-            symptom_id = diagnose.confirm_symptom(self.current_patient)
-            diagnose.evidence.append({'id': f'{symptom_id}', 'choice_id': 'present', 'source': 'initial'})
         d = diagnose.diagnosis(diagnose.evidence, self.current_patient.get_age(), self.current_patient.gender)
-        if provided_symptom:
-            diagnose.evidence.append({'id': f'{provided_symptom}', 'choice_id': 'present', 'source': 'initial'})
-            d = diagnose.diagnosis(diagnose.evidence, self.current_patient.get_age(), self.current_patient.gender)
         try:
             print(d['question']['text'])
             for condition in d['conditions']:
@@ -167,6 +163,7 @@ class MedBot:
                     probability = "{:.2f}".format(condition["probability"])
                     speech.speak(f'based on these answers it is believed you have '
                                  f'{condition["common_name"]}, with a probability of {probability} percent')
+                    diagnose.diagnosed_cond = condition["common_name"]
                     self.conversation()
                 else:
                     speech.speak(d['question']['text'])
@@ -178,7 +175,7 @@ class MedBot:
                                 response = speech.receive_command()
                                 choice = diagnose.return_choice(response)
                                 diagnose.evidence.append({'id': id, 'choice_id': choice})
-                                self.diagnose_respond(False)
+                                self.infermedica_diagnosis()
                             except infermedica_api.exceptions.BadRequest as err:
                                 print(err)
                                 continue
@@ -190,77 +187,76 @@ class MedBot:
         skin_issue = speech.receive_command()
         if skin_issue in diagnose.lesions:
             diagnosis = image.return_skin_classification('lesions')
-            speech.speak(f'image {diagnosis[0]}, has been diagnosed as a {diagnosis[1]}')
-
+            speech.speak(f'image {diagnosis[0]}, has been diagnosed as a {diagnosis[1]} lesion')
         elif skin_issue in diagnose.condition:
             diagnosis = image.return_skin_classification('conditions')
             speech.speak(
                 f'image {diagnosis[0]}, has been diagnosed as {diagnosis[1]}, with a percentage of {diagnosis[2]}')
             if diagnosis[1] != 'normal_skin':
-                self.further_skin_diagnosis(diagnosis[1])
+                self.further_skin_diagnosis(diagnosis[1], diagnosis[2])
         else:
             speech.speak('not recognised')
 
-    @staticmethod
-    def cardio_vascular_check():
-        speech.speak(f'your resting heart rate will now be taken to check if it is above average')
-        speech.speak(f'place your finger on the heart rate monitor')
-        heart_rate = diagnose.heart_rate()
-        rate = diagnose.heart_rate_analysis(heart_rate)
-        speech.speak(f'you have a {rate} resting heart rate of {heart_rate}')
-        if heart_rate > 100:
-            return 1
-        else:
-            return 0
-
-    def further_skin_diagnosis(self, condition):
-        speech.speak(f'due to this image being classified as {condition}, further diagnosis will be performed')
-        is_smoker = self.current_patient.is_smoker
-        is_exercise = self.current_patient.is_exercise
-        is_high_bpm = self.cardio_vascular_check()
-        body_mass = float(self.current_patient.body_mass)
-        bmi = self.current_patient.bmi
-        print(body_mass)
-        if body_mass > 30:
+    def calculate_cardiovascular_risk(self, is_smoker: int, is_exercise: int, is_high_bpm: int, body_mass: float):
+        if body_mass > 25:
             body_mass = 1
         else:
             body_mass = 0
         cardiovascular_risk = body_mass + is_smoker + is_exercise + is_high_bpm
-        print(body_mass, is_smoker, is_exercise, is_high_bpm)
-        print(cardiovascular_risk)
+        if cardiovascular_risk >= 3:
+            self.current_patient.is_cardiovascular_risk = True
 
-from patient import Patient
-patient = Patient()
-patient.name ='nathan'
-bot = MedBot(patient)
-bot.further_skin_diagnosis('measles')
-    #
-    # @staticmethod
-    # def further_diagnose(first_response, second_response, condition_type):
-    #     if first_response and second_response in speech.confirmation:
-    #         speech.speak(f'based on these image results and questions, it is advisable to speak to a doctor as soon as '
-    #                      f'possible, regarding {condition_type}. Would you like further information')
-    #         response = speech.receive_command()
-    #         if response in speech.confirmation:
-    #             # bot.search(f'tell me about {condition_type}', False)
-    #             pass
+    def skin_infermedica_diagnosis(self):
+        diagnose.evidence.clear()
+        diagnose.evidence.append({'id': 's_241', 'choice_id': 'present', 'source': 'initial'})
+        self.infermedica_diagnosis()
 
-    # def skin_further_diagnosis(self, condition_type):
-    #     for cond in self.conditions_symptoms.keys():
-    #         if cond.split('_', 1)[0] == condition_type:
-    #             speech.speak(self.conditions_symptoms[cond][0])
-    #             first_resp = speech.receive_command()
-    #             speech.speak(self.conditions_symptoms[cond][1])
-    #             second_resp = speech.receive_command()
-    #             if condition_type in ['psoriasis', 'rosacea', 'eczema', 'atopic_dermatitis']:
-    #                 self.cardio_vascular_check()
-    #             self.further_diagnose(first_resp, second_resp, condition_type)
-#     conditions_symptoms = {
-#         'eczema_symptoms': ['is the rash itchy', 'do you have a history of asthma or hay fever'],
-#         'chickenpox_symptoms': ['do you have an itchy blister rash', 'have you been exposed to anyone with chickenpox'],
-#         'measles_symptoms': ['have you been exposed to anyone with measles', 'do you have a fever'],
-#         'psoriasis_symptoms': ['does anyone in your family have psoriasis', 'do you have itchy skin'],
-#         'rosacea_symptoms': ['is you skin sensitive', 'do you have red patches of skin'],
-#         'vasculitis_symptoms': ['do you have a fever', 'are you fatigued'],
-#         'malignant lesion_symptoms': ['do you have a history of sunburn', 'has anyone in your family had a malignant lesion']
-#     }
+    def further_skin_diagnosis(self, condition, percentage):
+        # speech.speak(f'due to this image being classified as {condition}, further diagnosis will be performed')
+        is_smoker = self.current_patient.is_smoker
+        is_exercise = self.current_patient.is_exercise
+        is_exercise = diagnose.is_exercise_conv(is_exercise)
+        # is_high_bpm = diagnose.cardio_vascular_check()
+        is_high_bpm = 0
+        body_mass = float(self.current_patient.body_mass)
+        self.calculate_cardiovascular_risk(is_smoker, is_exercise, is_high_bpm, body_mass)
+        if condition == 'chickenpox' or condition == 'measles':
+            diagnose.contagious = True
+        self.skin_infermedica_diagnosis()
+        self.provide_full_skin_diagnosis_results(condition, percentage)
+
+    def provide_full_skin_diagnosis_results(self, condition, percent):
+        # THIS NEEDS RE WRITTING !!!!!!!!!!!!!!
+        speech.speak('final skin diagnosis results are as follows')
+        speech.speak(f'image classification identified {condition} with a percentage of {percent}')
+        if condition in ['psoriasis', 'rosacea', 'eczema', 'atopic_dermatitis']:
+            if self.current_patient.is_cardiovascular_risk:
+                cvr = 'higher'
+            else:
+                cvr = 'lower'
+            speech.speak(f'{condition} is associated with cardiovascular risk, based on your resting heart rate and '
+                         f'health data, you have a {cvr} risk of this condition')
+        if diagnose.contagious:
+            cont = 'exposed'
+        else:
+            cont = 'unexposed'
+            speech.speak(f'{condition} is a contagious condition, of which you have stated you have been {cont} to')
+        speech.speak(f'the result of the futher diagnosis has determined {diagnose.diagnosed_cond}')
+
+        # diagnosis_dict = {
+        #     'classified_img': condition,
+        #     'classified_pc': percent,
+        #     'is_cardio_vr': self.current_patient.is_cardiovascular_risk,
+        #     'is_contagious': diagnose.contagious,
+        # }
+        # print(diagnosis_dict.values())
+
+
+
+# from patient import Patient
+# patient = Patient()
+# patient.name ='nathan'
+# bot = MedBot(patient)
+# bot.diagnose_skin_photo()
+# bot.further_skin_diagnosis('measles')
+# bot.initial_infermedica_diagnosis()

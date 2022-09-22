@@ -9,13 +9,14 @@ class Patient:
 
     def __init__(self):
         self.__name = None
+        self.__is_cardiovascular_risk = False #None
 
     @property
     def name(self):
         return self.__name
 
     @name.setter
-    def name(self, value):
+    def name(self, value: str):
         self.__name = value
 
     @property
@@ -91,4 +92,13 @@ class Patient:
         speech.speak('starting diagnosis, please state your symptom')
         symptom = speech.receive_command()
         return symptom
+
+    @property
+    def is_cardiovascular_risk(self):
+        return self.__is_cardiovascular_risk
+
+    @is_cardiovascular_risk.setter
+    def is_cardiovascular_risk(self, value: bool):
+        self.__is_cardiovascular_risk = value
+
 
