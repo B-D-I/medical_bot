@@ -1,5 +1,5 @@
 from database import Database
-from modules import datetime, usb, statistics
+from modules import datetime
 from voice_control import VoiceControl
 db = Database()
 speech = VoiceControl()
@@ -7,18 +7,20 @@ speech = VoiceControl()
 
 class Patient:
 
-    def __init__(self, name: str):
-        self.name = name
-        self.__gender = db.get_db_data('gender', 'patients', 'first_name', name)[0]
-        self.__birth_year = db.get_db_data('birth_year', 'patients', 'first_name', name)[0]
-        self.__height = db.get_db_data('height_cm', 'patients', 'first_name', name)[0]
-        self.__weight = db.get_db_data('weight_kg', 'patients', 'first_name', name)[0]
-        self.__is_exercise = db.get_db_data('exercise_bool', 'patients', 'first_name', name)[0]
-        self.__is_smoker = db.get_db_data('smoker_bool', 'patients', 'first_name', name)[0]
+    def __init__(self):
+        self.__name = None
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, value):
+        self.__name = value
 
     @property
     def gender(self):
-        return self.__gender
+        return db.get_db_data('gender', 'patients', 'first_name', self.name)[0]
 
     @gender.setter
     def gender(self, new_value: str):
@@ -26,7 +28,7 @@ class Patient:
 
     @property
     def birth_year(self):
-        return self.__birth_year
+        return db.get_db_data('birth_year', 'patients', 'first_name', self.name)[0]
 
     def get_age(self):
         current_year = datetime.datetime.now().date()
@@ -37,23 +39,23 @@ class Patient:
 
     @property
     def height(self):
-        return self.__height
+        return db.get_db_data('height_cm', 'patients', 'first_name', self.name)[0]
 
     @property
     def weight(self):
-        return self.__weight
+        return db.get_db_data('weight_kg', 'patients', 'first_name', self.name)[0]
 
     @property
     def is_exercise(self):
-        return self.__is_exercise
+        return db.get_db_data('exercise_bool', 'patients', 'first_name', self.name)[0]
 
     @property
     def is_smoker(self):
-        return self.__is_smoker
+        return db.get_db_data('smoker_bool', 'patients', 'first_name', self.name)[0]
 
     @property
     def body_mass(self):
-        body_mass = self.__weight / (self.height / 100) ** 2
+        body_mass = self.weight / (self.height / 100) ** 2
         body_mass = "{:.2f}".format(body_mass)
         return body_mass
 
@@ -75,6 +77,7 @@ class Patient:
         return bmi_weight
 
     def update_weight(self):
+        speech.speak(f'your current weight is {self.weight} kilos')
         speech.speak('say in kilos your new weight')
         response = speech.receive_command()
         if response.isnumeric():
@@ -83,41 +86,8 @@ class Patient:
         else:
             speech.speak('incorrect value')
 
-    @staticmethod
-    def heart_rate():
-        """
-        This function initiates the heart_rate function from the Arduino. First a green led will light to inform the user
-        to place finger on the sensor. Once a pulse is recognised, the green led turn off and a red led will flash
-        intermittently until the function is complete. Numerous bpm readings will be appended to a list, and an average
-        BPM will be spoken.
-        :return: the average beats per minute of the user
-        """
-        heart_rate_limit = 0
-        heart_rates = []
-        # heart_rate_limit to ensure a suitable amount of heart rate readings
-        while heart_rate_limit < 20:
-            # call the arduino heart_rate function
-            usb.write(b'heart_rate')
-            # convert the bytes into data type
-            line = usb.readline().decode('utf-8').rstrip()
-            print(line)
-            # slice the required information
-            heart_rates.append(line[-3:])
-            heart_rate_limit += 1
-        print(heart_rates)
-        for rates in heart_rates:
-            # remove non-required data
-            if rates == 'tly' or rates == 'ted':
-                heart_rates.remove(rates)
-                try:
-                    av_heart_rate = int(statistics.median(heart_rates))
-                    return av_heart_rate
-                except TypeError or ValueError as error:
-                    print('Error: ', error)
-
     @property
     def symptom(self):
-        # symptom = input('starting diagnosis, please state your symptom')
         speech.speak('starting diagnosis, please state your symptom')
         symptom = speech.receive_command()
         return symptom

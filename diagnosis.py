@@ -1,9 +1,11 @@
-from credentials import *
-from voice_control import VoiceControl
 import infermedica_api
 import infermedica_api.exceptions
-
+from image_classification import ImageClassification
+from modules import usb, statistics
+from credentials import *
+from voice_control import VoiceControl
 speech = VoiceControl()
+image = ImageClassification()
 
 
 class DiagnosisAPI:
@@ -45,3 +47,61 @@ class DiagnosisAPI:
         elif response in speech.unsure:
             choice_id = 'unknown'
         return choice_id
+
+    @staticmethod
+    def heart_rate_analysis(heart_rate):
+        if int(heart_rate) < 60:
+            return 'low'
+        elif int(heart_rate) > 100:
+            return 'high'
+        else:
+            return 'average'
+
+    @staticmethod
+    def heart_rate():
+        """
+        This function initiates the heart_rate function from the Arduino. First a green led will light to inform the user
+        to place finger on the sensor. Once a pulse is recognised, the green led turn off and a red led will flash
+        intermittently until the function is complete. Numerous bpm readings will be appended to a list, and an average
+        BPM will be spoken.
+        :return: the average beats per minute of the user
+        """
+        heart_rate_limit = 0
+        heart_rates = []
+        # heart_rate_limit to ensure a suitable amount of heart rate readings
+        while heart_rate_limit < 20:
+            # call the arduino heart_rate function
+            usb.write(b'heart_rate')
+            # convert the bytes into data type
+            line = usb.readline().decode('utf-8').rstrip()
+            print(line)
+            # slice the required information
+            heart_rates.append(line[-3:])
+            heart_rate_limit += 1
+        print(heart_rates)
+        for rates in heart_rates:
+            # remove non-required data
+            if rates == 'tly' or rates == 'ted':
+                heart_rates.remove(rates)
+                try:
+                    av_heart_rate = int(statistics.median(heart_rates))
+                    return av_heart_rate
+                except TypeError or ValueError as error:
+                    print('Error: ', error)
+
+    def confirm_symptom(self, patient):
+        symptom = patient.symptom
+        symptoms = self.search_symptoms(symptom, patient.get_age())
+        speech.speak('please confirm the symptom you are experiencing')
+        for symptom in symptoms:
+            speech.speak(symptom['label'])
+        confirmed_symptom = speech.receive_command()
+        for symp in symptoms:
+            if symp['label'].lower().replace(',', '') == confirmed_symptom:
+                return symp['id']
+
+
+
+
+
+

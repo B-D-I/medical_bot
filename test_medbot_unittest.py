@@ -12,7 +12,8 @@ import datetime
 
 db = Database()
 bot = MedBot()
-patient = Patient('nathan')
+patient = Patient()
+patient.name = 'nathan'
 image = ImageClassification()
 diagnosis = DiagnosisAPI()
 speech = VoiceControl()
