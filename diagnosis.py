@@ -12,7 +12,6 @@ class DiagnosisAPI:
     lesions = ['mole', 'lesions', 'mole check', 'lesion check', 'moles', 'lesion']
     condition = ['skin conditions', 'rash skin', 'other conditions', 'other', 'other skin condition', 'rash']
     diagnosed_cond = ''
-    contagious = False
 
     def __init__(self):
         self.BASE_URL = 'https://api.infermedica.com/v3'
@@ -49,6 +48,7 @@ class DiagnosisAPI:
 
     @staticmethod
     def convert_smoker_exercise_value(col_type: str):
+        # convert and return a boolean from user input
         if col_type in speech.confirmation:
             return 1
         else:
@@ -124,12 +124,20 @@ class DiagnosisAPI:
 
     @staticmethod
     def is_exercise_conv(is_exercise: int):
+        # converts the boolean to correlate with diagnosis method
         is_ex = None
         if is_exercise == 0:
             is_ex = 1
         if is_exercise == 1:
             is_ex = 0
         return is_ex
+
+    @staticmethod
+    def confirm_if_exposed_to_contagious_cont():
+        speech.speak('have you been exposed to anyone with a contagious condition')
+        respond = speech.receive_command()
+        if respond in speech.confirmation:
+            return True
 
     def cardio_vascular_check(self):
         speech.speak(f'your resting heart rate will now be taken to check if it is above average')
@@ -142,7 +150,11 @@ class DiagnosisAPI:
         else:
             return 0
 
-
+    def retrieve_diagnosis(self):
+        speech.speak(f'previously diagnosed condition is')
+        if self.diagnosed_cond is not None:
+            for i in self.diagnosed_cond:
+                speech.speak(f'{i}')
 
 
 

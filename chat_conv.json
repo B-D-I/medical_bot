@@ -10,7 +10,7 @@
   },
   { "conv_name": "your_name",
     "inputs": ["what is your name", "what's your name", "who are you", "what are you"],
-    "outputs": ["you can call me a Little G P, i'm your medical assistant"]
+    "outputs": ["you can call me med bot, i am your medical assistant"]
   },
   { "conv_name": "formality",
     "inputs": ["how are you", "how's it going", "you ok"],
@@ -66,7 +66,7 @@
   },
   {"conv_name": "update_weight",
     "inputs": ["update my weight", "modify weight", "update weight"],
-    "outputs": [""]
+    "outputs": ["ok"]
   },
   {"conv_name": "diagnosis",
     "inputs": ["start diagnosis", "diagnosis", "diagnose me", "begin diagnosis"],
@@ -80,8 +80,8 @@
     "inputs": ["set camera", "configure camera", "adjust camera", "camera preview"],
     "outputs": ["starting camera for adjustment"]
   },
-  {"conv_name": "",
-    "inputs": [""],
-    "outputs": [""]
+  {"conv_name": "retrieve_diagnosis",
+    "inputs": ["retrieve diagnosis", "get diagnosis", "get previous diagnosis", "tell me my diagnosis"],
+    "outputs": ["ok"]
   }
 ]}

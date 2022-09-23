@@ -31,6 +31,7 @@ class MedBot:
             "set_camera": image.set_camera,
             "update_weight": self.current_patient.update_weight,
             "diagnosis": self.initial_infermedica_diagnosis,
+            "retrieve_diagnosis": diagnose.retrieve_diagnosis
         }
 
     @staticmethod
@@ -187,7 +188,7 @@ class MedBot:
 
     def diagnose_skin_photo(self):
         # provide patient with a diagnosis of a provided skin photo -> if image is diagnosed as a known condition,
-        # further methods will be called
+        # then further methods will be called
         speech.speak('confirm if image is of a mole or other skin condition')
         skin_issue = speech.receive_command()
         if skin_issue in diagnose.lesions:
@@ -195,10 +196,11 @@ class MedBot:
             speech.speak(f'image {diagnosis[0]}, has been diagnosed as a {diagnosis[1]} lesion')
         elif skin_issue in diagnose.condition:
             diagnosis = image.return_skin_classification('conditions')
-            speech.speak(
-                f'image {diagnosis[0]}, has been diagnosed as {diagnosis[1]}, with a percentage of {diagnosis[2]}')
             if diagnosis[1] != 'normal_skin':
                 self.further_skin_diagnosis(diagnosis[1], diagnosis[2])
+            else:
+                speech.speak(
+                    f'image {diagnosis[0]}, has been diagnosed as {diagnosis[1]}')
         else:
             speech.speak('not recognised')
 
@@ -212,59 +214,42 @@ class MedBot:
             self.current_patient.is_cardiovascular_risk = True
 
     def skin_infermedica_diagnosis(self):
+        # start diagnosis with 'dermatological changes' set as symptom id
         diagnose.evidence.clear()
         diagnose.evidence.append({'id': 's_241', 'choice_id': 'present', 'source': 'initial'})
         self.infermedica_diagnosis()
 
-
-        ## ------------------------------------------------------
-
     def further_skin_diagnosis(self, condition, percentage):
-        # speech.speak(f'due to this image being classified as {condition}, further diagnosis will be performed')
+        """
+        This method is called if the result of a skin condition classification is positive for a condition. The patients
+        cardiovascular and other data will be assessed and contributed towards the diagnosis. The patient will then
+        be asked if they wish to undergo further diagnosis, provided by the Infermedica API.
+        :param condition: determined from skin classification
+        :param percentage: percentage of prediction
+        :return: Infermedica API diagnosis
+        """
         is_smoker = self.current_patient.is_smoker
         is_exercise = self.current_patient.is_exercise
         is_exercise = diagnose.is_exercise_conv(is_exercise)
-        # is_high_bpm = diagnose.cardio_vascular_check()
-        is_high_bpm = 0
+        is_high_bpm = diagnose.cardio_vascular_check()
         body_mass = float(self.current_patient.body_mass)
         self.calculate_cardiovascular_risk(is_smoker, is_exercise, is_high_bpm, body_mass)
-        if condition == 'chickenpox' or condition == 'measles':
-            diagnose.contagious = True
-        self.skin_infermedica_diagnosis()
-        self.provide_full_skin_diagnosis_results(condition, percentage)
-
-    def provide_full_skin_diagnosis_results(self, condition, percent):
-        # THIS NEEDS RE WRITTING !!!!!!!!!!!!!!
-        speech.speak('final skin diagnosis results are as follows')
-        speech.speak(f'image classification identified {condition} with a percentage of {percent}')
-        if condition in ['psoriasis', 'rosacea', 'eczema', 'atopic_dermatitis']:
-            if self.current_patient.is_cardiovascular_risk:
-                cvr = 'higher'
-            else:
-                cvr = 'lower'
-            speech.speak(f'{condition} is associated with cardiovascular risk, based on your resting heart rate and '
-                         f'health data, you have a {cvr} risk of this condition')
-        if diagnose.contagious:
-            cont = 'exposed'
-        else:
-            cont = 'unexposed'
-            speech.speak(f'{condition} is a contagious condition, of which you have stated you have been {cont} to')
-        speech.speak(f'the result of the futher diagnosis has determined {diagnose.diagnosed_cond}')
-
-        # diagnosis_dict = {
-        #     'classified_img': condition,
-        #     'classified_pc': percent,
-        #     'is_cardio_vr': self.current_patient.is_cardiovascular_risk,
-        #     'is_contagious': diagnose.contagious,
-        # }
-        # print(diagnosis_dict.values())
+        speech.speak(f'The image has been classified as {condition}, with a probability of {percentage}')
+        if condition == 'chickenpox' or condition == 'measles' and diagnose.confirm_if_exposed_to_contagious_cont():
+            speech.speak('you are at a higher risk of having this contagious condition, as you have been exposed to '
+                         'others who also have it')
+        if condition in ['psoriasis', 'rosacea', 'eczema', 'atopic_dermatitis'] and self.current_patient.is_cardiovascular_risk:
+            speech.speak('you are at a higher risk of having this condition, as due to you health information, bmi,'
+                         'and resting heart rate, you are of a higher cardiovascular risk ')
+        speech.speak('would you like to undergo a further skin diagnosis')
+        response = speech.receive_command()
+        if response in speech.confirmation:
+            self.skin_infermedica_diagnosis()
 
 
 
-# from patient import Patient
-# patient = Patient()
-# patient.name ='nathan'
-# bot = MedBot(patient)
-# bot.diagnose_skin_photo()
-# bot.further_skin_diagnosis('measles')
-# bot.initial_infermedica_diagnosis()
+from patient import Patient
+patient = Patient()
+patient.name ='test'
+bot = MedBot(patient)
+bot.diagnose_skin_photo()
