@@ -2,7 +2,7 @@ import infermedica_api
 import infermedica_api.exceptions
 from image_classification import ImageClassification
 from modules import usb, statistics
-from credentials_mine import *
+from credentials import *
 from voice_control import VoiceControl
 speech = VoiceControl()
 image = ImageClassification()

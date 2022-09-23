@@ -7,7 +7,7 @@ from keras.preprocessing import image
 from camera import Camera
 from voice_control import VoiceControl
 from database import Database
-from credentials_mine import conditions_hash, lesions_hash
+from credentials import conditions_hash, lesions_hash
 from tflite_runtime.interpreter import Interpreter
 speech = VoiceControl()
 db = Database()

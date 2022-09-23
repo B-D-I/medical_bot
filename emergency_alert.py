@@ -3,7 +3,7 @@ import smtplib
 import ssl
 from modules import requests, json, random, usb
 from voice_control import VoiceControl
-from credentials_mine import *
+from credentials import *
 
 speech = VoiceControl()
 

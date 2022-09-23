@@ -6,7 +6,7 @@ from patient import Patient
 from image_classification import ImageClassification
 from voice_control import VoiceControl
 from diagnosis import DiagnosisAPI
-from credentials_mine import conditions_hash, lesions_hash
+from credentials import conditions_hash, lesions_hash
 import wikipedia.exceptions
 import datetime
 
