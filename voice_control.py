@@ -38,6 +38,12 @@ class VoiceControl:
                 return "None"
             return query
 
+    def return_confirmation_binary(self, response):
+        if response in self.confirmation:
+            return 1
+        else:
+            return 0
+
     @staticmethod
     def speak(*audio):
         """

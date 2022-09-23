@@ -3,12 +3,16 @@ import smtplib
 import ssl
 from modules import requests, json, random, usb
 from voice_control import VoiceControl
-from credentials import *
+from credentials_mine import *
 
 speech = VoiceControl()
 
 
 class EmergencyAlert:
+    """
+    This class is used to provide emergency alerts to patient next of kin, via Twitter, Alexa and Email.
+    The device will also set off a short alarm. (credentials stored in credentials file)
+    """
 
     def send_all_alerts(self):
         speech.speak('are you sure you wish to send alerts? ')

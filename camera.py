@@ -5,6 +5,9 @@ speech = VoiceControl()
 
 
 class Camera:
+    """
+    Camera class provides piCamera instantiation and all camera functions
+    """
 
     def __init__(self):
         self.camera = PiCamera()
@@ -23,11 +26,10 @@ class Camera:
         sleep(60)
         self.camera.stop_preview()
 
-    def take_face_photo(self):
-        speech.speak('please confirm your first name')
-        username = speech.receive_command()
+    def take_face_photo(self, username):
         speech.speak(f'in ten seconds your image will be taken, ensure you adjust the focus')
         self.camera.start_preview()
         sleep(10)
         self.camera.capture(f'images/face_rec_images/{username}.jpg')
         self.camera.stop_preview()
+

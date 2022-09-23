@@ -6,12 +6,12 @@ from patient import Patient
 from image_classification import ImageClassification
 from voice_control import VoiceControl
 from diagnosis import DiagnosisAPI
-from credentials import conditions_hash, lesions_hash
+from credentials_mine import conditions_hash, lesions_hash
 import wikipedia.exceptions
 import datetime
 
 patient = Patient()
-patient.name = 'nathan'
+patient.name = 'test'
 db = Database()
 bot = MedBot(patient)
 image = ImageClassification()
@@ -24,7 +24,7 @@ class TestMedBotFunctions(unittest.TestCase):
     def test_db_selection(self):
         table = 'patients'
         col = 'patient_id'
-        user_id = 1
+        user_id = 2
         result = db.get_db_data(col, table, col, user_id)[0]
         self.assertEqual(user_id, result)
         self.assertIsNotNone(result)
@@ -38,7 +38,7 @@ class TestMedBotFunctions(unittest.TestCase):
 
     def test_get_name(self):
         result = patient.name
-        expected = 'nathan'
+        expected = 'test'
         self.assertEqual(result, expected)
         self.assertIsNotNone(result)
 
@@ -66,6 +66,39 @@ class TestMedBotFunctions(unittest.TestCase):
     def test_model_integrity(self):
         self.assertEqual(db.integrity_check('models/converted_conditions_model.tflite'), conditions_hash)
         self.assertEqual(db.integrity_check('models/converted_lesions_model.tflite'), lesions_hash)
+
+    def test_return_confirmation_binary(self):
+        expected = 1
+        result = speech.return_confirmation_binary('yes')
+        self.assertIsNotNone(result)
+        self.assertEqual(expected, result)
+
+    def test_convert_smoker_exercise_value(self):
+        expected = 1
+        result = diagnosis.convert_smoker_exercise_value('yes')
+        self.assertIsNotNone(result)
+        self.assertEqual(expected, result)
+
+    def test_heart_rate_analysis(self):
+        expected_low = 'low'
+        expected_av = 'average'
+        expected_high = 'high'
+        result_one = diagnosis.heart_rate_analysis(50)
+        result_two = diagnosis.heart_rate_analysis(70)
+        result_three = diagnosis.heart_rate_analysis(110)
+        self.assertIsNotNone(result_one)
+        self.assertEqual(result_one, expected_low)
+        self.assertEqual(result_two, expected_av)
+        self.assertEqual(result_three, expected_high)
+
+    def test_exercise_conversion(self):
+        expected_one = 1
+        expected_two = 0
+        result_one = diagnosis.is_exercise_conv(0)
+        result_two = diagnosis.is_exercise_conv(1)
+        self.assertIsNotNone(result_one)
+        self.assertEqual(result_one, expected_one)
+        self.assertEqual(result_two, expected_two)
 
     def test_skin_lesion_model(self):
         # iterate over test skin lesion files and confirm expected result

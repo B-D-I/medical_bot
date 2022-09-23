@@ -68,6 +68,10 @@ class Database:
 
     @staticmethod
     def integrity_check(file_path):
+        # check hash of file(used for models)
         with open(file_path, 'rb') as f:
             file = f.read()
             return sha256(file).hexdigest()
+
+
+

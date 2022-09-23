@@ -14,6 +14,9 @@ diagnose = DiagnosisAPI()
 
 
 class MedBot:
+    """
+    This class provides the methods that are directly called during conversation with the patient
+    """
 
     def __init__(self, current_patient):
         self.current_patient = current_patient
@@ -183,6 +186,8 @@ class MedBot:
             print(error)
 
     def diagnose_skin_photo(self):
+        # provide patient with a diagnosis of a provided skin photo -> if image is diagnosed as a known condition,
+        # further methods will be called
         speech.speak('confirm if image is of a mole or other skin condition')
         skin_issue = speech.receive_command()
         if skin_issue in diagnose.lesions:
@@ -210,6 +215,9 @@ class MedBot:
         diagnose.evidence.clear()
         diagnose.evidence.append({'id': 's_241', 'choice_id': 'present', 'source': 'initial'})
         self.infermedica_diagnosis()
+
+
+        ## ------------------------------------------------------
 
     def further_skin_diagnosis(self, condition, percentage):
         # speech.speak(f'due to this image being classified as {condition}, further diagnosis will be performed')

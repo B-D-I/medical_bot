@@ -6,10 +6,11 @@ speech = VoiceControl()
 
 
 class Patient:
+    gender_female = ['female', 'woman', 'lady', 'girl']
 
     def __init__(self):
         self.__name = None
-        self.__is_cardiovascular_risk = False #None
+        self.__is_cardiovascular_risk = False
 
     @property
     def name(self):
@@ -53,6 +54,13 @@ class Patient:
     @property
     def is_smoker(self):
         return db.get_db_data('smoker_bool', 'patients', 'first_name', self.name)[0]
+
+    def check_gender(self, gender):
+        # infermedica api only accepts male or female
+        if gender in self.gender_female:
+            return 'female'
+        else:
+            return 'male'
 
     @property
     def body_mass(self):

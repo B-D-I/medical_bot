@@ -2,7 +2,7 @@ import infermedica_api
 import infermedica_api.exceptions
 from image_classification import ImageClassification
 from modules import usb, statistics
-from credentials import *
+from credentials_mine import *
 from voice_control import VoiceControl
 speech = VoiceControl()
 image = ImageClassification()
@@ -24,10 +24,18 @@ class DiagnosisAPI:
         return self.api.info()
 
     def diagnosis(self, evidence, age: int, gender: str):
+        # used for Infermedica api requests
         request = self.api.diagnosis(evidence=evidence, age=age, sex=gender)
         return request
 
     def search_symptoms(self, symptom_str: str, age: int):
+        """
+        user provides their symptom for diagnosis. This is sent to Infermedica API and a possible conditions are
+        returned for confirmation
+        :param symptom_str: patient symptom
+        :param age: patient age
+        :return: possible conditions to begin diagnosis
+        """
         search_res = []
         for i in symptom_str:
             res = self.api.search(i, age=age)
@@ -38,6 +46,13 @@ class DiagnosisAPI:
                 search_res.append(res_p)
                 res_p = None
             return search_res
+
+    @staticmethod
+    def convert_smoker_exercise_value(col_type: str):
+        if col_type in speech.confirmation:
+            return 1
+        else:
+            return 0
 
     @staticmethod
     def return_choice(response: str):
@@ -92,6 +107,11 @@ class DiagnosisAPI:
                     print('Error: ', error)
 
     def confirm_symptom(self, patient):
+        """
+        user can check for similar symptom types before starting diagnosis
+        :param patient: current patient
+        :return: the id of the chosen symptom for diagnosis
+        """
         symptom = patient.symptom
         symptoms = self.search_symptoms(symptom, patient.get_age())
         speech.speak('please confirm the symptom you are experiencing')

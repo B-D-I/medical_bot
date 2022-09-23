@@ -17,20 +17,13 @@ Medical Bot: Home Diagnosis Device
 """
 __author__ = "Nathan Hewett"
 
-# TEST create account and TIDY
-# TEST full diagnosis (medbot) and TIDY
-# camera take face photo func TIDY
-# move convert_smoker_ex function
-# add more unit test
-# secure sqlite
-# docstrings and final TIDY
-
-
 
 def face_login():
     speech.speak('what is your username')
     name = speech.receive_command().lower()
     try:
+        # instantiate med bot with new patient -> confirm face recognition matches username -> set patient name
+        # to username -> start conversation function
         bot = MedBot(patient)
         if bot.login_recognition(name):
             usb.write(b'alert_off')
@@ -40,32 +33,36 @@ def face_login():
     except FileNotFoundError as error:
         print(error)
 
-def convert_smoker_exercise_value(col_type: str):
-    if col_type in speech.confirmation:
-        return 1
-    else:
-        return 0
 
 def create_account():
-    speech.speak('what is your username')
-    name = speech.receive_command().lower()
-    speech.speak('what is your gender')
-    gender = speech.receive_command().lower()
-    speech.speak('what year were you born')
-    year_birth = int(speech.receive_command())
-    speech.speak('what is your height')
-    height = float(speech.receive_command().lower())
-    speech.speak('what is your weight')
-    weight = float(speech.receive_command().lower())
-    speech.speak('do you exercise regularly')
-    exercise = speech.receive_command().lower()
-    exercise = convert_smoker_exercise_value(exercise)
-    speech.speak('do you smoke')
-    smoke = speech.receive_command().lower()
-    smoke = convert_smoker_exercise_value(smoke)
-    db.create_patient('patients', name, gender, year_birth, height, weight, exercise, smoke)
-    image.take_face_photo()
+    patient_details_response = []
+    patient_account_questions = ['name', 'gender', 'birth year', 'height in centimetres', 'weight in kilos',
+                                 'do you exercise', 'do you smoke']
+    try:
+        for item in patient_account_questions:
+            speech.speak(f'{item}')
+            response = speech.receive_command()
+            if item == 'name':
+                patient_details_response.append(response.lower())
+            elif item == 'gender':
+                patient_details_response.append(patient.check_gender(response))
+            elif item == 'birth year':
+                patient_details_response.append(int(response))
+            elif item in ['height in centimetres', 'weight in kilos']:
+                patient_details_response.append(float(response))
+            elif item in ['do you exercise', 'do you smoke']:
+                patient_details_response.append(speech.return_confirmation_binary(response))
+        # update database with new patient
+        db.create_patient('patients', patient_details_response[0], patient_details_response[1],
+                          patient_details_response[2], patient_details_response[3], patient_details_response[4],
+                          patient_details_response[5], patient_details_response[6])
+        # take image for facial recognition login
+        image.take_face_photo(patient_details_response[0])
+    except ValueError as error:
+        speech.speak('incorrect answer format, please start again')
+        print(error)
 
+    db.get_all_table_data('patients')
 
 
 if __name__ == "__main__":

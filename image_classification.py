@@ -7,7 +7,7 @@ from keras.preprocessing import image
 from camera import Camera
 from voice_control import VoiceControl
 from database import Database
-from credentials import conditions_hash, lesions_hash
+from credentials_mine import conditions_hash, lesions_hash
 from tflite_runtime.interpreter import Interpreter
 speech = VoiceControl()
 db = Database()
@@ -15,6 +15,11 @@ camera = Camera()
 
 
 class ImageClassification:
+    """
+    This class provides all image classification functionalty. For convolutional neural network models, a TFLite
+    Interpreter is created for the required model. The provided image's dimension are modified, then predictions are
+    performed. For facial recognition the face_recognition module is included.
+    """
     face_locations = []
     face_encodings = []
     output = np.empty((240, 320, 3), dtype=np.uint8)
@@ -35,8 +40,8 @@ class ImageClassification:
         camera.set_camera()
 
     @staticmethod
-    def take_face_photo():
-        camera.take_face_photo()
+    def take_face_photo(username):
+        camera.take_face_photo(username)
 
     @staticmethod
     def encode_patient_image(patient_name: str):
