@@ -31,7 +31,7 @@ class MedBot:
             "set_camera": image.set_camera,
             "update_weight": self.current_patient.update_weight,
             "diagnosis": self.initial_infermedica_diagnosis,
-            "retrieve_diagnosis": diagnose.retrieve_diagnosis
+            "retrieve_diagnosis": self.retrieve_diagnosis
         }
 
     @staticmethod
@@ -167,7 +167,7 @@ class MedBot:
                     probability = "{:.2f}".format(condition["probability"])
                     speech.speak(f'based on these answers it is believed you have '
                                  f'{condition["common_name"]}, with a probability of {probability} percent')
-                    diagnose.diagnosed_cond = condition["common_name"]
+                    diagnose.diagnosed_verbal = condition["common_name"]
                     self.conversation()
                 else:
                     speech.speak(d['question']['text'])
@@ -194,6 +194,7 @@ class MedBot:
         if skin_issue in diagnose.lesions:
             diagnosis = image.return_skin_classification('lesions')
             speech.speak(f'image {diagnosis[0]}, has been diagnosed as a {diagnosis[1]} lesion')
+            diagnose.diagnosed_image = f'{diagnosis[1]} lesion'
         elif skin_issue in diagnose.condition:
             diagnosis = image.return_skin_classification('conditions')
             if diagnosis[1] != 'normal_skin':
@@ -201,6 +202,7 @@ class MedBot:
             else:
                 speech.speak(
                     f'image {diagnosis[0]}, has been diagnosed as {diagnosis[1]}')
+            diagnose.diagnosed_image = diagnosis[1]
         else:
             speech.speak('not recognised')
 
@@ -239,13 +241,30 @@ class MedBot:
             speech.speak('you are at a higher risk of having this contagious condition, as you have been exposed to '
                          'others who also have it')
         if condition in ['psoriasis', 'rosacea', 'eczema', 'atopic_dermatitis'] and self.current_patient.is_cardiovascular_risk:
-            speech.speak('you are at a higher risk of having this condition, as due to you health information, bmi,'
-                         'and resting heart rate, you are of a higher cardiovascular risk ')
+            speech.speak('you are at a higher risk of having this condition, due to you bmi,'
+                         'resting heart rate, and other health information, you are of a higher cardiovascular risk')
         speech.speak('would you like to undergo a further skin diagnosis')
         response = speech.receive_command()
         if response in speech.confirmation:
             self.skin_infermedica_diagnosis()
 
+    def retrieve_diagnosis(self):
+        speech.speak(f'do wish to hear your recent image or verbal diagnosis')
+        resp = speech.receive_command()
+        if resp in ['image', 'photo', 'skin image', 'picture'] and diagnose.diagnosed_image is not None:
+            self.give_diagnosis(diagnose.diagnosed_image)
+        elif resp in ['verbal', 'spoken', 'speech'] and diagnose.diagnosed_verbal is not None:
+            self.give_diagnosis(diagnose.diagnosed_verbal)
+
+    def give_diagnosis(self, diagnosis):
+        speech.speak(f'previous image diagnosis is {diagnosis}. would you like more information')
+        resp = speech.receive_command()
+        if resp in speech.confirmation:
+            self.search(f'tell me about {diagnosis}', False)
+
+
+# TEST FULL SKIN IMAGE DIAGNOSIS -> WITH ECZEMA IMAGE -> GET FURTHER INFO
+# TEST APP IN FULL
 
 
 from patient import Patient

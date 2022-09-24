@@ -11,7 +11,8 @@ image = ImageClassification()
 class DiagnosisAPI:
     lesions = ['mole', 'lesions', 'mole check', 'lesion check', 'moles', 'lesion']
     condition = ['skin conditions', 'rash skin', 'other conditions', 'other', 'other skin condition', 'rash']
-    diagnosed_cond = ''
+    diagnosed_verbal = ''
+    diagnosed_image = ''
 
     def __init__(self):
         self.BASE_URL = 'https://api.infermedica.com/v3'
@@ -150,11 +151,7 @@ class DiagnosisAPI:
         else:
             return 0
 
-    def retrieve_diagnosis(self):
-        speech.speak(f'previously diagnosed condition is')
-        if self.diagnosed_cond is not None:
-            for i in self.diagnosed_cond:
-                speech.speak(f'{i}')
+
 
 
 
