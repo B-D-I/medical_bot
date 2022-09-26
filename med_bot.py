@@ -165,6 +165,7 @@ class MedBot:
             for condition in d['conditions']:
                 if condition['probability'] > 0.7:
                     probability = "{:.2f}".format(condition["probability"])
+                    print(probability)
                     speech.speak(f'based on these answers it is believed you have '
                                  f'{condition["common_name"]}, with a probability of {probability} percent')
                     diagnose.diagnosed_verbal = condition["common_name"]
@@ -261,14 +262,3 @@ class MedBot:
         resp = speech.receive_command()
         if resp in speech.confirmation:
             self.search(f'tell me about {diagnosis}', False)
-
-
-# TEST FULL SKIN IMAGE DIAGNOSIS -> WITH ECZEMA IMAGE -> GET FURTHER INFO
-# TEST APP IN FULL
-
-
-from patient import Patient
-patient = Patient()
-patient.name ='test'
-bot = MedBot(patient)
-bot.diagnose_skin_photo()
