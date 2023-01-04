@@ -1,17 +1,17 @@
 import os
 import unittest
-from database import Database
-from med_bot import MedBot
+from scratch_database import Database
+from scratch_med_bot import MedBot
 from patient import Patient
-from image_classification import ImageClassification
-from voice_control import VoiceControl
-from diagnosis import DiagnosisAPI
-from credentials import conditions_hash, lesions_hash
+from scratch_image_classification import ImageClassification
+from device_voice_control import VoiceControl
+from scratch_diagnosis import DiagnosisAPI
+from credentialsOLD import conditions_hash, lesions_hash
 import wikipedia.exceptions
 import datetime
 
 patient = Patient()
-patient.name = 'test'
+patient.name = 'test_images'
 db = Database()
 bot = MedBot(patient)
 image = ImageClassification()
@@ -38,7 +38,7 @@ class TestMedBotFunctions(unittest.TestCase):
 
     def test_get_name(self):
         result = patient.name
-        expected = 'test'
+        expected = 'test_images'
         self.assertEqual(result, expected)
         self.assertIsNotNone(result)
 
@@ -101,7 +101,7 @@ class TestMedBotFunctions(unittest.TestCase):
         self.assertEqual(result_two, expected_two)
 
     def test_skin_lesion_model(self):
-        # iterate over test skin lesion files and confirm expected result
+        # iterate over test_images skin lesion files and confirm expected result
         image_path = f'images/test_lesions/'
         for filename in os.listdir(image_path):
             diagnose = image.prediction(image_path, 'lesions', filename)

@@ -74,25 +74,25 @@ void setup() {
 
 
 
-  // Configure the PulseSensor object, by assigning our variables to it.
+  // Configure the PulseSensor object, by assigning our variables to it
 
   pulseSensor.analogInput(PulseWire);
 
-  pulseSensor.blinkOnPulse(redLED);       //auto-magically blink Arduino's LED with heartbeat.
+  pulseSensor.blinkOnPulse(redLED);       //auto-magically blink Arduino's LED
 
   pulseSensor.setThreshold(Threshold);
 
   pinMode(greenLED, OUTPUT);                  // green led
 
 
-  analogReference(EXTERNAL);                // Read AREF pin as USB noisy...
+  analogReference(EXTERNAL);                // Read AREF pin as USB noisy
 
 
-  // Double-check the "pulseSensor" object was created and "began" seeing a signal.
+  // Double-check the "pulseSensor" object was created and "began" seeing a signal
 
    if (pulseSensor.begin()) {
 
-    Serial.println("Working correctly");  //This prints one time at Arduino power-up,  or on Arduino reset.
+    Serial.println("Working correctly");  //This prints one time at Arduino power-up,  or on Arduino reset
 
 
 
