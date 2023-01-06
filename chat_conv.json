@@ -17,7 +17,7 @@
     "outputs": ["ok"]
   },
   {"conv_name": "diagnosis",
-    "inputs": ["diagnose skin photo","take skin photo", "take skin image", "camera for skin", "take a skin photo", "start diagnosis", "begin diagnosis", "diagnosis", "classify image", "check skin", "check skin condition", "check for skin condition", "diagnose skin", "skin diagnosis"],
+    "inputs": ["start a diagnosis", "diagnose skin photo","take skin photo", "take skin image", "camera for skin", "take a skin photo", "start diagnosis", "begin diagnosis", "diagnosis", "classify image", "check skin", "check skin condition", "check for skin condition", "diagnose skin", "skin diagnosis"],
     "outputs": ["ok"]
   },
   {"conv_name": "set_camera",

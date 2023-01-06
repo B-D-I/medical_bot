@@ -24,18 +24,15 @@ class Patient:
 
     @property
     def gender(self):
-        return self.__gender
+        # infermedica api only accepts male or female
+        if self.__gender in self.gender_female:
+            return 'female'
+        else:
+            return 'male'
 
     @gender.setter
     def gender(self, value: str):
         self.__gender = value
-
-    def check_gender(self, gender):
-        # infermedica api only accepts male or female
-        if gender in self.gender_female:
-            return 'female'
-        else:
-            return 'male'
 
     @property
     def birth_year(self):
@@ -71,7 +68,10 @@ class Patient:
 
     @property
     def is_exercise(self):
-        return self.__is_exercise
+        if self.__is_exercise == 1:
+            return 'yes'
+        else:
+            return 'no'
 
     @is_exercise.setter
     def is_exercise(self, value):
@@ -79,7 +79,10 @@ class Patient:
 
     @property
     def is_smoker(self):
-        return self.__is_smoker
+        if self.__is_smoker == 1:
+            return 'yes'
+        else:
+            return 'no'
 
     @is_smoker.setter
     def is_smoker(self, value):

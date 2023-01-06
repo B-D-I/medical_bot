@@ -116,11 +116,6 @@ if __name__ == "__main__":
 
 
 
-# TO DO:
-## ENABLE REPORT EMAIL SENDING + IMAGE ATTACHMENT
-## TIDY CODE
-
-
 
 
 
