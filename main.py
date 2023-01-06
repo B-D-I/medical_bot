@@ -2,7 +2,7 @@ import json
 import statistics
 import random
 from device_voice_control import VoiceControl
-from diagnosis_bot import Diagnosis
+from diagnosis import Diagnosis
 from patient import Patient
 from scratch_assistance_alert import AssistanceAlert
 from camera import Camera
@@ -23,7 +23,7 @@ Medical Bot: Home Diagnosis Device
 __author__ = "Nathan Hewett"
 
 patient_details_response = []
-# patient_details_response = ['nathan', 'male', 1989, 175.0, 90.0, 1, 0]   # test list
+# patient_details_response = ['test', 'male', 1990, 180.0, 90.0, 1, 0]   # test list
 
 
 def get_patient_info():

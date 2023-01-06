@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from keras.preprocessing import image
+from hashlib import sha256
 
 
 class ImageClassifier:
@@ -8,16 +9,17 @@ class ImageClassifier:
     This class performs image classification using the TensorFlow Lite interpreter
     """
 
+    def __init__(self):
+        self.model_path = f'models/convertedeffnetSVM97.tflite'
+
     conditions_classes = {
         0: 'MPXV',
         1: 'Normal',
         2: 'Other Skin Condition'
     }
 
-    @staticmethod
-    def __return_interpreter(model: str):
-        model_path = f'models/convertedeffnetSVM97.tflite'
-        interpreter = tf.lite.Interpreter(model_path=model_path)
+    def __return_interpreter(self, model: str):
+        interpreter = tf.lite.Interpreter(model_path=self.model_path)
         interpreter.allocate_tensors()
         return interpreter
 
@@ -68,3 +70,9 @@ class ImageClassifier:
             if top_index[1] == key:
                 print(filename, '\nclass: ', top_index[1], ' - ', self.conditions_classes[key], '', score_percent)
                 return [filename, self.conditions_classes[key], score_percent]
+
+    def integrity_check(self):
+        # check hash of file
+        with open(self.model_path, 'rb') as f:
+            file = f.read()
+            return sha256(file).hexdigest()

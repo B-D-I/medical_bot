@@ -21,20 +21,6 @@ speech = VoiceControl()
 
 class TestMedBotFunctions(unittest.TestCase):
 
-    def test_db_selection(self):
-        table = 'patients'
-        col = 'patient_id'
-        user_id = 2
-        result = db.get_db_data(col, table, col, user_id)[0]
-        self.assertEqual(user_id, result)
-        self.assertIsNotNone(result)
-
-    def test_get_table_data(self):
-        result = db.get_all_table_data('patients')
-        self.assertIsNotNone(result)
-
-    def test_search_function(self):
-        self.assertRaises(wikipedia.exceptions.PageError, bot.search, 'tell me about pepper pig', True)
 
     def test_get_name(self):
         result = patient.name

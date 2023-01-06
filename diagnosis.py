@@ -89,4 +89,3 @@ class Diagnosis:
             )
         speech.speak('diagnosis has been completed and the results have been forwarded '
                      'to a medical professional')
-
