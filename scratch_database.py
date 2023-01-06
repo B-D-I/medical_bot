@@ -1,6 +1,6 @@
 import sqlite3
 from sqlite3 import Error as sqlError
-from modules import Union
+from scratch_modules import Union
 from hashlib import sha256
 
 

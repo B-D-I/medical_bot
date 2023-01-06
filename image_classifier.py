@@ -4,6 +4,9 @@ from keras.preprocessing import image
 
 
 class ImageClassifier:
+    """
+    This class performs image classification using the TensorFlow Lite interpreter
+    """
 
     conditions_classes = {
         0: 'MPXV',

@@ -50,7 +50,7 @@ const int greenLED = 5;           // green led - used to instruct when to place 
 
 int buzzer = 4;                 // buzzer
 
-int alarmLength = 50;          // length of alarm
+int alarmLength = 40;          // length of alarm
 
 int alarm = 1;                  // alarm
 

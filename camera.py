@@ -1,12 +1,11 @@
 from picamera import PiCamera
-from modules import sleep, usb
+from time import sleep
 
 
 class Camera:
     """
     Camera class provides piCamera instantiation and all camera functions
     """
-
     def __init__(self):
         self.camera = PiCamera()
 
@@ -20,7 +19,7 @@ class Camera:
 
     def set_camera(self):
         self.camera.start_preview()
-        sleep(60)
+        sleep(30)
         self.camera.stop_preview()
 
 

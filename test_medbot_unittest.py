@@ -6,7 +6,7 @@ from patient import Patient
 from scratch_image_classification import ImageClassification
 from device_voice_control import VoiceControl
 from scratch_diagnosis import DiagnosisAPI
-from credentialsOLD import conditions_hash, lesions_hash
+from scratch_credentialsOLD import conditions_hash, lesions_hash
 import wikipedia.exceptions
 import datetime
 

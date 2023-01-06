@@ -1,9 +1,9 @@
 import tweepy
 import smtplib
 import ssl
-from modules import requests, json, random, usb
+from scratch_modules import requests, json, random, usb
 from device_voice_control import VoiceControl
-from credentialsOLD import *
+from scratch_credentialsOLD import *
 
 speech = VoiceControl()
 

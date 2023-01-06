@@ -1,5 +1,5 @@
-from modules import datetime
-from modules import random, json
+from scratch_modules import datetime
+from scratch_modules import random, json
 from device_voice_control import VoiceControl
 from scratch_image_classification import ImageClassification
 from scratch_assistance_alert import AssistanceAlert
@@ -119,7 +119,7 @@ class MedBot:
             for i in chat_dict["conversation"]:  # for items in dict
                 if query in i['inputs']:  # if query found
                     if i['outputs'] != "":
-                        speech.speak(random.choice(i['outputs']), f'{self.current_patient.name}')  # speak the outputs + name
+                        speech.speak(random.choice(i['outputs']), f'{self.current_patient.name}')
                         func = i['conv_name']
                         self.call_func(func)
                         continue

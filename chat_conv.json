@@ -23,5 +23,9 @@
   {"conv_name": "set_camera",
     "inputs": ["set camera", "configure camera", "adjust camera", "camera preview"],
     "outputs": ["starting camera for adjustment"]
+  },
+  {"conv_name": "heart_rate",
+    "inputs": ["check heart rate", "check beats per minute", "heart rate", "check my heart rate", "check bpm", "get heart rate"],
+    "outputs": ["ok, place your finger on the heart rate monitor"]
   }
 ]}

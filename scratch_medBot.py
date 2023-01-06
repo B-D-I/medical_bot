@@ -1,5 +1,5 @@
-from modules import datetime
-from modules import random, json
+from scratch_modules import datetime
+from scratch_modules import random, json
 from device_voice_control import VoiceControl
 from image_classification import ImageClassification
 from emergency_alert import EmergencyAlert

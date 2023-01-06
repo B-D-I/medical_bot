@@ -1,6 +1,6 @@
 from picamera import PiCamera
 from device_voice_control import VoiceControl
-from modules import sleep
+from scratch_modules import sleep
 speech = VoiceControl()
 
 
