@@ -30,7 +30,7 @@ class Diagnosis:
         image_path = f'images/{image_type}_images/'
         for filename in os.listdir(image_path):
             diagnosis = classifier.prediction(image_path, image_type, filename)
-            # append the predicted class name, percentage 
+            # append the image filename, predicted class, and percentage 
             self.predictions_results.append(diagnosis[0])
             self.predictions_results.append(diagnosis[1])
             self.predictions_results.append(diagnosis[2])
