@@ -14,6 +14,8 @@ SUCH AS:<br/>
 <br/>
 Code is reduced and only allows for patient data to be kept in volatile memory for security <br/>
 <br/>
+SCHEMATIC
+<br/>
 1: Raspberry Pi 4 model B (8gb) - Single-board computer for running DL model and software<br/>
 2: Raspberry Pi high-quality camera module - Enable high-quality camera images for classification<br/>
 3: 8-50mm zoom lens HQ - Enable capturing of high-quality macroscopic images<br/>
