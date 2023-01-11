@@ -7,6 +7,7 @@
 IGNORE ALL SCRATCH FILES, THESE INCLUDED FUNCTIONS UNECCESSARY OR BEYOND THE SCOPE OF THE DISSERTATION RESEARCH<br/><br/>
 SUCH AS:<br/>
 - heart rate sensor<br/>
+- Infermedica API diagnosis<br/>
 - SQLite database<br/>
 - web scraping<br/>
 - user CRUD functions<br/>
