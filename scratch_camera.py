@@ -1,7 +1,7 @@
 from picamera import PiCamera
-from device_voice_control import VoiceControl
+from communication import Communication
 from scratch_modules import sleep
-speech = VoiceControl()
+speech = Communication()
 
 
 class Camera:

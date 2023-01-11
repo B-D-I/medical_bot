@@ -1,13 +1,13 @@
 from scratch_modules import datetime
 from scratch_modules import random, json
-from device_voice_control import VoiceControl
+from communication import Communication
 from image_classification import ImageClassification
 from emergency_alert import EmergencyAlert
 from diagnosis import DiagnosisAPI
 import wikipedia
 import wikipedia.exceptions
 import infermedica_api.exceptions
-speech = VoiceControl()
+speech = Communication()
 image = ImageClassification()
 alert = EmergencyAlert()
 diagnose = DiagnosisAPI()

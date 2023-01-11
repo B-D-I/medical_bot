@@ -1,10 +1,11 @@
 import numpy as np
+import time
 import tensorflow as tf
 from keras.preprocessing import image
 from hashlib import sha256
 
 
-class ImageClassifier:
+class Classification:
     """
     This class performs image classification using the TensorFlow Lite interpreter
     """
@@ -53,7 +54,14 @@ class ImageClassifier:
 
         image = self.return_image_dimensions(filename, image_path)
         interpreter.set_tensor(input_details[0]['index'], image)
+
+        # perform inference and measure time taken
+        t_1 = time.time()
         interpreter.invoke()
+        t_2 = time.time()
+        inference_time = (t_2 - t_1)*1000
+        print('inference time: ', inference_time)
+
         tflite_model_predictions = interpreter.get_tensor(output_details[0]['index'])
 
         max_score = np.max(tflite_model_predictions)

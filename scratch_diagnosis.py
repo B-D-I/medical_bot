@@ -3,8 +3,8 @@ import infermedica_api.exceptions
 from scratch_image_classification import ImageClassification
 from scratch_modules import usb, statistics
 from scratch_credentialsOLD import *
-from device_voice_control import VoiceControl
-speech = VoiceControl()
+from communication import Communication
+speech = Communication()
 image = ImageClassification()
 
 

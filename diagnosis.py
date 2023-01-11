@@ -6,10 +6,10 @@ from credentials import smtp_server, sender_email, receiver_email, app_passwd
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
-from device_voice_control import VoiceControl
-from image_classifier import ImageClassifier
-speech = VoiceControl()
-classifier = ImageClassifier()
+from communication import Communication
+from classification import Classification
+speech = Communication()
+classifier = Classification()
 
 
 class Diagnosis:
@@ -43,10 +43,7 @@ class Diagnosis:
             triage = 2
         return triage
 
-    def send_report(self):
-        """
-        :return: Send an email containing diagnosis data and results of MPXV classification
-        """
+    def create_email(self):
         msg = MIMEMultipart('related')
         msg['Subject'] = f'Triage Report: Patient {self.patient_id}'
         msg['From'] = sender_email
@@ -57,21 +54,20 @@ class Diagnosis:
         msg.attach(msg_alt)
         # email content
         msg_text = MIMEText(f'''
-        MPXV Image Classification Triage Report
-        <br><br>Patient: {self.current_patient.name} (id:{self.patient_id}) 
-        <br>Triage level: {self.determine_triage()}
-        <br>Image: {self.predictions_results[0]}
-        <br>Predicted Condition: {self.predictions_results[1]}
-        <br>Prediction Probability: {self.predictions_results[2]}
-        <br>
-        <br>Gender: {self.current_patient.gender}
-        <br>Age: {self.current_patient.age}
-        <br>BMI: {self.current_patient.body_mass}  ({self.current_patient.bmi})
-        <br>Exercises: {self.current_patient.is_exercise}
-        <br>Smoker: {self.current_patient.is_smoker}
-        
-        <br><br> <img src="cid:image1">
-        ''', 'html')
+                MPXV Image Classification Triage Report
+                <br><br>Patient: {self.current_patient.name} (id:{self.patient_id}) 
+                <br>Triage level: {self.determine_triage()}
+                <br>Predicted Condition: {self.predictions_results[1]}
+                <br>Prediction Probability: {self.predictions_results[2]}
+                <br>
+                <br>Gender: {self.current_patient.gender}
+                <br>Age: {self.current_patient.age}
+                <br>BMI: {self.current_patient.body_mass}  ({self.current_patient.bmi})
+                <br>Exercises: {self.current_patient.is_exercise}
+                <br>Smoker: {self.current_patient.is_smoker}
+
+                <br><br> <img src="cid:image1">
+                ''', 'html')
         msg_alt.attach(msg_text)
         # get image
         fp = open('images/MPXV_images/MPXV1.jpg', 'rb')
@@ -80,7 +76,13 @@ class Diagnosis:
         # attach image using header tag
         msg_image.add_header('Content-ID', '<image1>')
         msg.attach(msg_image)
+        return msg
 
+    def send_report(self):
+        """
+        :return: Send an email containing diagnosis data and results of MPXV classification
+        """
+        msg = self.create_email()
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL(smtp_server, 465, context=context) as server:
             server.login(sender_email, app_passwd)

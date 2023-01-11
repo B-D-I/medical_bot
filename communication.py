@@ -3,7 +3,7 @@ import speech_recognition as sr
 import pyaudio
 
 
-class VoiceControl:
+class Communication:
 
     def __init__(self):
         self.mic = sr.Microphone()
