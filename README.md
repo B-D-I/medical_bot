@@ -1,5 +1,7 @@
 # medical_bot
-v2 - includes camera
+
+<br/>
+<b>Enables patient medical image to be captured, then classified for MPXV, normal, or other skin condition. Then the diagnosis and accompanying data is sent via email to specified address.</b> 
 <br/>
 IGNORE ALL SCRATCH FILES, THESE INCLUDED FUNCTIONS UNECCESSARY OR BEYOND THE SCOPE OF THE DISSERTATION RESEARCH:
 - heart rate sensor
