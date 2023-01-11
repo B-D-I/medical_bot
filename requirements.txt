@@ -1,5 +1,4 @@
 picamera~=1.13
-requests~=2.28.1
 serial~=0.0.97
 pyserial~=3.5
 numpy~=1.21.6
