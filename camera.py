@@ -9,11 +9,11 @@ class Camera:
     def __init__(self):
         self.camera = PiCamera()
 
-    def take_image(self, amount: int, image_name: str):
+    def take_image(self, amount: int):
         self.camera.start_preview()
         sleep(10)
         for i in range(1, amount+1):
-            self.camera.capture(f'images/{image_name}_images/{image_name}{i}.jpg')
+            self.camera.capture(f'images/patient_image{i}.jpg')
             sleep(1)
             self.camera.stop_preview()
 

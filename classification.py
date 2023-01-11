@@ -11,7 +11,7 @@ class Classification:
     """
 
     def __init__(self):
-        self.model_path = f'models/convertedeffnetSVM97.tflite'
+        self.model_path = f'model/convertedeffnetSVM97.tflite'
 
     conditions_classes = {
         0: 'MPXV',
@@ -19,7 +19,7 @@ class Classification:
         2: 'Other Skin Condition'
     }
 
-    def __return_interpreter(self, model: str):
+    def __return_interpreter(self):
         interpreter = tf.lite.Interpreter(model_path=self.model_path)
         interpreter.allocate_tensors()
         return interpreter
@@ -47,8 +47,8 @@ class Classification:
         images = np.expand_dims(images, axis=0)
         return images
 
-    def return_prediction(self, image_path: str, image_type: str, filename: str):
-        interpreter = self.__return_interpreter(image_type)
+    def return_prediction(self, image_path: str, filename: str):
+        interpreter = self.__return_interpreter()
         input_details = self.__return_interpreter_details(interpreter, 'input')
         output_details = self.__return_interpreter_details(interpreter, 'output')
 
@@ -70,9 +70,9 @@ class Classification:
         score_percent = "{:.0%}".format(round_score)
         return [tflite_model_predictions, top_index, round_score, score_percent]
 
-    def prediction(self, image_path: str, image_type: str, filename: str):
-        top_index = self.return_prediction(image_path, image_type, filename)[1]
-        score_percent = self.return_prediction(image_path, image_type, filename)[3]
+    def prediction(self, image_path: str, filename: str):
+        top_index = self.return_prediction(image_path, filename)[1]
+        score_percent = self.return_prediction(image_path, filename)[3]
 
         for key in self.conditions_classes:
             if top_index[1] == key:

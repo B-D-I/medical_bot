@@ -24,12 +24,12 @@ class Diagnosis:
         self.camera = camera
         self.predictions_results = []
 
-    def start_diagnosis(self, image_type: str):
+    def start_diagnosis(self):
         speech.speak('image will be taken in 10 seconds')
-        self.camera.take_image(1, image_type)
-        image_path = f'images/{image_type}_images/'
+        self.camera.take_image(1)
+        image_path = f'images/'
         for filename in os.listdir(image_path):
-            diagnosis = classifier.prediction(image_path, image_type, filename)
+            diagnosis = classifier.prediction(image_path, filename)
             # append the image filename, predicted class, and percentage 
             self.predictions_results.append(diagnosis[0])
             self.predictions_results.append(diagnosis[1])
@@ -71,7 +71,7 @@ class Diagnosis:
                 ''', 'html')
         msg_alt.attach(msg_text)
         # get image
-        fp = open('images/MPXV_images/MPXV1.jpg', 'rb')
+        fp = open('images/patient_image1.jpg', 'rb')
         msg_image = MIMEImage(fp.read())
         fp.close()
         # attach image using header tag

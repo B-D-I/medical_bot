@@ -69,7 +69,7 @@ class Initiation:
         self.get_patient_info()
         bot = Diagnosis(patient, camera)
         usb.write(b'alert_off')
-        bot.start_diagnosis('MPXV')
+        bot.start_diagnosis()
 
     def require_assistance(self):
         # alert function
