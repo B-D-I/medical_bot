@@ -4,12 +4,12 @@
 <b>Enables patient medical image to be captured, then classified for MPXV, normal, or other skin condition. Then the diagnosis and accompanying data is sent via email to specified address.</b> 
 <br/>
 <br/>
-IGNORE ALL SCRATCH FILES, THESE INCLUDED FUNCTIONS UNECCESSARY OR BEYOND THE SCOPE OF THE DISSERTATION RESEARCH:
-- heart rate sensor
-- SQLite database
-- web scraping
-- user CRUD functions
-- time / date / chatbot functions etc.
+IGNORE ALL SCRATCH FILES, THESE INCLUDED FUNCTIONS UNECCESSARY OR BEYOND THE SCOPE OF THE DISSERTATION RESEARCH:<br/>
+- heart rate sensor<br/>
+- SQLite database<br/>
+- web scraping<br/>
+- user CRUD functions<br/>
+- time / date / chatbot functions etc.<br/>
 <br/>
 Code is reduced and only allows for patient data to be kept in volatile memory for security <br/>
 <br/>
