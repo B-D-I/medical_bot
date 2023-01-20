@@ -2,10 +2,10 @@ import tweepy
 import smtplib
 import ssl
 from scratch_modules import requests, json, random, usb
-from device_voice_control import VoiceControl
+from communication import Communication
 from scratch_credentialsOLD import *
 
-speech = VoiceControl()
+speech = Communication()
 
 
 class AssistanceAlert:

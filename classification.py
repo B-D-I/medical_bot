@@ -1,16 +1,17 @@
 import numpy as np
+import time
 import tensorflow as tf
 from keras.preprocessing import image
 from hashlib import sha256
 
 
-class ImageClassifier:
+class Classification:
     """
     This class performs image classification using the TensorFlow Lite interpreter
     """
 
     def __init__(self):
-        self.model_path = f'models/convertedeffnetSVM97.tflite'
+        self.model_path = f'model/convertedeffnetSVM97.tflite'
 
     conditions_classes = {
         0: 'MPXV',
@@ -18,7 +19,7 @@ class ImageClassifier:
         2: 'Other Skin Condition'
     }
 
-    def __return_interpreter(self, model: str):
+    def __return_interpreter(self):
         interpreter = tf.lite.Interpreter(model_path=self.model_path)
         interpreter.allocate_tensors()
         return interpreter
@@ -46,14 +47,21 @@ class ImageClassifier:
         images = np.expand_dims(images, axis=0)
         return images
 
-    def return_prediction(self, image_path: str, image_type: str, filename: str):
-        interpreter = self.__return_interpreter(image_type)
+    def return_prediction(self, image_path: str, filename: str):
+        interpreter = self.__return_interpreter()
         input_details = self.__return_interpreter_details(interpreter, 'input')
         output_details = self.__return_interpreter_details(interpreter, 'output')
 
         image = self.return_image_dimensions(filename, image_path)
         interpreter.set_tensor(input_details[0]['index'], image)
+
+        # perform inference and measure time taken
+        t_1 = time.time()
         interpreter.invoke()
+        t_2 = time.time()
+        inference_time = (t_2 - t_1)*1000
+        print('inference time: ', inference_time)
+
         tflite_model_predictions = interpreter.get_tensor(output_details[0]['index'])
 
         max_score = np.max(tflite_model_predictions)
@@ -62,9 +70,9 @@ class ImageClassifier:
         score_percent = "{:.0%}".format(round_score)
         return [tflite_model_predictions, top_index, round_score, score_percent]
 
-    def prediction(self, image_path: str, image_type: str, filename: str):
-        top_index = self.return_prediction(image_path, image_type, filename)[1]
-        score_percent = self.return_prediction(image_path, image_type, filename)[3]
+    def prediction(self, image_path: str, filename: str):
+        top_index = self.return_prediction(image_path, filename)[1]
+        score_percent = self.return_prediction(image_path, filename)[3]
 
         for key in self.conditions_classes:
             if top_index[1] == key:

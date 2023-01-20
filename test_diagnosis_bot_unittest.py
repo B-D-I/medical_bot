@@ -3,11 +3,11 @@ from credentials import file_hash
 from patient import Patient
 from camera import Camera
 from diagnosis import Diagnosis
-from image_classifier import ImageClassifier
+from classification import Classification
 
 camera = Camera()
 patient = Patient()
-classifier = ImageClassifier()
+classifier = Classification()
 patient.name = 'test'
 bot = Diagnosis(patient, camera)
 

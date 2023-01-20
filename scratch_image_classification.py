@@ -5,11 +5,11 @@ import numpy as np
 import tensorflow as tf
 from keras.preprocessing import image
 from camera import Camera
-from device_voice_control import VoiceControl
+from communication import Communication
 from scratch_database import Database
 from scratch_credentialsOLD import conditions_hash, lesions_hash
 from tflite_runtime.interpreter import Interpreter
-speech = VoiceControl()
+speech = Communication()
 db = Database()
 camera = Camera()
 

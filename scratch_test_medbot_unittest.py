@@ -4,7 +4,7 @@ from scratch_database import Database
 from scratch_med_bot import MedBot
 from patient import Patient
 from scratch_image_classification import ImageClassification
-from device_voice_control import VoiceControl
+from communication import Communication
 from scratch_diagnosis import DiagnosisAPI
 from scratch_credentialsOLD import conditions_hash, lesions_hash
 import wikipedia.exceptions
@@ -16,7 +16,7 @@ db = Database()
 bot = MedBot(patient)
 image = ImageClassification()
 diagnosis = DiagnosisAPI()
-speech = VoiceControl()
+speech = Communication()
 
 
 class TestMedBotFunctions(unittest.TestCase):

@@ -1,8 +1,8 @@
 from database import Database
 from scratch_modules import datetime
-from device_voice_control import VoiceControl
+from communication import Communication
 db = Database()
-speech = VoiceControl()
+speech = Communication()
 
 
 class Patient:
