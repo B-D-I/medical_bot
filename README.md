@@ -4,9 +4,8 @@
 <b>Enables patient medical image to be captured, then classified for MPXV, normal, or other skin condition. Then the diagnosis and accompanying data is sent via email to specified address.</b> 
 <br/>
 <br/>
-IGNORE ALL SCRATCH FILES, THESE INCLUDED FUNCTIONS ARE BEYOND THE SCOPE OF THE DISSERTATION RESEARCH<br/><br/>
-SUCH AS:<br/>
-- heart rate sensor<br/>
+Scratch files contained in some branches are for functionality that was outside of the scope of the dissertation research, and can be ignored. For example:<br/>
+- heart rate sensor module<br/>
 - Infermedica API diagnosis<br/>
 - SQLite database<br/>
 - web scraping<br/>
